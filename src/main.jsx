@@ -4,6 +4,7 @@ import App from './App'
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import LoginPage from './pages/login';
+import './main.scss'
 
 
 
