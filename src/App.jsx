@@ -18,6 +18,7 @@ import Loading from './components/Loading';
 import NotFound from './components/NotFound';
 import AdminPage from './pages/admin';
 import ProtectedRoute from './components/ProtectedRoute';
+import LayoutAdmin from './components/Admin/LayoutAdmin';
 
 const Layout = () => {
   return (
@@ -29,30 +30,16 @@ const Layout = () => {
   )
 }
 
-const LayoutAdmin = () => {
-  const isAdminRoute = window.location.pathname.startsWith('/admin');
-  const user = useSelector(state => state.account.user);
-  const userRole = user.role;
-
-  return (
-    <div className='layout-app'>
-      {isAdminRoute && userRole === "ADMIN" && <Header />}
-      <Outlet />
-      {isAdminRoute && userRole === "ADMIN" && <Footer />}
-    </div>
-  )
-}
 
 
 export default function App() {
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector(state => state.account.isAuthenticated);
+  const isLoading = useSelector(state => state.account.isLoading);
 
   const getAccount = async () => {
     if (
       window.location.pathname === '/login'
       || window.location.pathname === '/register'
-      || window.location.pathname === '/'
     ) return;
     const res = await callFetchAccount();
     if (res && res.data) {
@@ -73,7 +60,7 @@ export default function App() {
       children: [
         { index: true, element: <Home /> },
         {
-          path: "contact",
+          path: "user",
           element: <ContactPage />,
         },
         {
@@ -102,6 +89,10 @@ export default function App() {
           path: "book",
           element: <BookPage />,
         },
+        {
+          path: "order",
+          element: <BookPage />,
+        },
       ],
     },
     {
@@ -115,7 +106,7 @@ export default function App() {
   ]);
   return (
     <>
-      {isAuthenticated === true
+      {isLoading === false
         || window.location.pathname === '/login'
         || window.location.pathname === '/register'
         || window.location.pathname === '/'

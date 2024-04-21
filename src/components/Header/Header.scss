@@ -1,0 +1,102 @@
+.header {
+    display        : flex;
+    justify-content: space-between;
+
+    &__title {
+        display        : flex;
+        color          : #5495ff;
+        display        : flex;
+        justify-content: center;
+        align-items    : center;
+        cursor         : pointer;
+
+
+
+        &--icon {
+            @media only screen and (min-width: 300px) {
+                display: none;
+            }
+
+            @media only screen and (min-width: 850px) {
+                display: block;
+            }
+
+            font-size: 45px;
+
+        }
+
+        &--text {
+            @media only screen and (min-width: 300px) {
+                display: none;
+            }
+
+            @media only screen and (min-width: 850px) {
+                display: block;
+            }
+
+            font-size: 35px;
+        }
+
+        &--bar {
+            @media only screen and (min-width: 300px) {
+                display: block;
+            }
+
+            @media only screen and (min-width: 850px) {
+                display: none;
+            }
+
+            font-size: 35px;
+
+            .icon {}
+
+
+
+        }
+    }
+
+    &__search {
+        display        : flex;
+        justify-content: center;
+        align-items    : center;
+
+        input {
+            width        : 80%;
+            padding      : 10px;
+            border-radius: 10px;
+            margin       : 10px;
+        }
+    }
+
+    &__feature {
+        display        : flex;
+        justify-content: space-around;
+        align-items    : center;
+
+        &--cart {
+
+            padding: 10px;
+            cursor : pointer;
+
+            span {
+                font-size: 30px;
+                color    : #5495ff
+            }
+
+            &:hover {
+                background-color: rgba(84, 149, 255, 0.3);
+                border-radius   : 10px;
+            }
+        }
+
+        &--account {
+            @media only screen and (min-width: 300px) {
+                display: none;
+            }
+
+            @media only screen and (min-width: 850px) {
+                display: block;
+            }
+        }
+    }
+}

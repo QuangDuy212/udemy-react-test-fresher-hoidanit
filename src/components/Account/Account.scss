@@ -1,0 +1,26 @@
+.account {
+    padding: 5px;
+    cursor : pointer;
+
+    a {
+        color: #000 !important;
+
+        div {
+            div {
+                font-size: 16px;
+            }
+        }
+    }
+
+    &:hover {
+
+        a {
+
+            div {
+                div {
+                    color: #ccc;
+                }
+            }
+        }
+    }
+}

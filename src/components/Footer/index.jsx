@@ -1,9 +1,11 @@
-
+import './Footer.scss'
 
 const Footer = () => {
     return (
         <>
-            Footer
+            <div className="footer">
+                Book shop is designed by Duy Nguyen
+            </div>
         </>
     )
 }
