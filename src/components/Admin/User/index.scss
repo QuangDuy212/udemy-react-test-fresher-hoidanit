@@ -1,0 +1,16 @@
+.search {
+    display: flex;
+    width  : 100%;
+
+    .search-item {
+        gap  : 10px;
+        width: 30%;
+    }
+
+}
+
+.del-btn {
+    font-size: 20px;
+    color    : red;
+    cursor   : pointer;
+}

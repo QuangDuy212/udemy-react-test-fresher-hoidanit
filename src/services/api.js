@@ -16,6 +16,6 @@ export const callLogout = () => {
     return axios.post("/api/v1/auth/logout");
 }
 
-export const callGetUserWithPaginate = (current, size) => {
-    return axios.get(`/api/v1/user?current=${current}&pageSize=${size}`);
+export const callGetUserWithPaginate = (query) => {
+    return axios.get(`/api/v1/user${query}`);
 }
