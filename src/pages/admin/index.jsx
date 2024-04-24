@@ -1,9 +1,9 @@
-const AdminPage = () => {
+const DashboardAdmin = () => {
     return (
         <>
-            admin dashboard
+            Admin Dashboar
         </>
     )
 }
 
-export default AdminPage;
+export default DashboardAdmin;

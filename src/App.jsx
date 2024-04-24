@@ -5,7 +5,6 @@ import {
 } from "react-router-dom";
 import LoginPage from './pages/login';
 import ContactPage from './pages/contact';
-import BookPage from './pages/book';
 import { Outlet } from "react-router-dom";
 import Header from './components/Header';
 import Footer from './components/Footer'
@@ -16,9 +15,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { doGetAccountAction } from './redux/account/accountSlice';
 import Loading from './components/Loading';
 import NotFound from './components/NotFound';
-import AdminPage from './pages/admin';
 import ProtectedRoute from './components/ProtectedRoute';
 import LayoutAdmin from './components/Admin/LayoutAdmin';
+import DashboardAdmin from './pages/admin';
+import BookPage from './pages/book';
+import User from './components/Admin/User';
 
 const Layout = () => {
   return (
@@ -78,12 +79,12 @@ export default function App() {
         {
           index: true, element:
             <ProtectedRoute>
-              <AdminPage />
+              <DashboardAdmin />
             </ProtectedRoute>
         },
         {
           path: "user",
-          element: <ContactPage />,
+          element: <User />,
         },
         {
           path: "book",
