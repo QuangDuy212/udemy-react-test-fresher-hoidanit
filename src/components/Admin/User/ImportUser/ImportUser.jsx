@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Button, Modal, message, Upload } from 'antd';
+import { Button, Modal, message, Upload, Space, Table, Tag } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
-import { Space, Table, Tag } from 'antd';
+import * as XLSX from 'xlsx';
 
 const { Dragger } = Upload;
 
 const ImportUser = (props) => {
     const { isOpenImportUser, setIsOpenImportUser } = props;
+
+    const [data, setData] = useState("");
 
     const showModal = () => {
         setIsOpenImportUser(true);
@@ -28,19 +30,38 @@ const ImportUser = (props) => {
 
     const propsUpload = {
         name: 'file',
-        multiple: true,
+        multiple: false,
+        maxCount: 1,
         //action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
         //https://stackoverflow.com/questions/51514757/action-function-is-required-with-antd-upload-control-but-i-dont-need-it
 
         //https://stackoverflow.com/questions/11832930/html-input-file-accept-attribute-file-type-csv
         accept: ".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel",
-        customRequest: { dummyRequest },
+        customRequest: dummyRequest,
         onChange(info) {
             const { status } = info.file;
             if (status !== 'uploading') {
                 console.log(info.file, info.fileList);
             }
             if (status === 'done') {
+                const file = info.fileList[0].originFileObj;
+                let reader = new FileReader();
+
+                reader.onload = function (e) {
+                    let data = new Uint8Array(e.target.result);
+                    let workbook = XLSX.read(data, { type: 'array' });
+                    // find the name of your sheet in the workbook first
+                    let sheet = workbook.Sheets[workbook.SheetNames[0]];
+
+                    // convert to json format
+                    const jsonData = XLSX.utils.sheet_to_json(sheet, {
+                        header: ["fullName", "email", "phone"],
+                        range: 1
+                    });
+                    if (jsonData && jsonData.length > 0)
+                        setData(jsonData);
+                };
+                reader.readAsArrayBuffer(file);
                 message.success(`${info.file.name} file uploaded successfully.`);
             } else if (status === 'error') {
                 message.error(`${info.file.name} file upload failed.`);
@@ -87,7 +108,7 @@ const ImportUser = (props) => {
                 okText={'Import'}
                 maskClosable={false}
             >
-                <Dragger {...props}>
+                <Dragger {...propsUpload}>
                     <p className="ant-upload-drag-icon">
                         <InboxOutlined />
                     </p>
@@ -99,6 +120,7 @@ const ImportUser = (props) => {
                 <Table
                     columns={columns}
                     title={renderHeader}
+                    dataSource={data}
                 />
             </Modal>
         </>
