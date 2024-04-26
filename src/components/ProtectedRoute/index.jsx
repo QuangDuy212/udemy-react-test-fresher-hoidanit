@@ -28,4 +28,4 @@ const ProtectedRoute = (props) => {
     )
 }
 
-export default ProtectedRoute;
+export { RoleBaseRoute, ProtectedRoute }

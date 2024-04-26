@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { doGetAccountAction } from './redux/account/accountSlice';
 import Loading from './components/Loading';
 import NotFound from './components/NotFound';
-import ProtectedRoute from './components/ProtectedRoute';
+import { ProtectedRoute, RoleBaseRoute } from './components/ProtectedRoute';
 import LayoutAdmin from './components/Admin/LayoutAdmin';
 import DashboardAdmin from './pages/admin';
 import BookPage from './pages/book';
@@ -72,7 +72,12 @@ export default function App() {
     },
     {
       path: "/admin",
-      element: <LayoutAdmin />,
+      element:
+        <>
+          <RoleBaseRoute>
+            <LayoutAdmin />
+          </RoleBaseRoute>
+        </>,
       errorElement: <NotFound />,
 
       children: [

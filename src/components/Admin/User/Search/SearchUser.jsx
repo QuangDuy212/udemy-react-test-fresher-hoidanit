@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Form, Input } from 'antd';
 import { PiExport } from "react-icons/pi";
+import './SearchUser.scss'
 
 const SearchUser = (props) => {
     const handleSearch = (query) => {
@@ -37,13 +38,22 @@ const SearchUser = (props) => {
             query += `&phone=/${value.user.phone}/i`;
         }
         if (query) {
+            props.setIsSearch(true);
+            props.setQuerySearch(query);
             handleSearch(query);
         }
     };
 
+    const handleClear = () => {
+        props.setIsSearch(false);
+        let inputClear = document.getElementById("form_item_path_id").reset();
+    }
+
     return (
         <>
-            <Form name="form_item_path" layout="vertical" onFinish={onFinish}>
+            <Form n
+                ame="form_item_path" layout="vertical" onFinish={onFinish}
+                id='form_item_path_id'>
                 <MyFormItemGroup prefix={['user']}>
                     <MyFormItem name="fullName" label="Name">
                         <Input />
@@ -56,11 +66,13 @@ const SearchUser = (props) => {
                         <Input />
                     </MyFormItem>
                 </MyFormItemGroup>
-                <div style={{ textAlign: "right" }}>
+                <div style={{ textAlign: "right" }} className='search-btn'>
                     <Button type="primary" htmlType="submit">
                         Search
                     </Button>
-                    <Button type='default'>Clear</Button>
+                    <Button type='default'
+                        onClick={() => handleClear()}
+                    >Clear</Button>
                 </div>
             </Form>
         </>

@@ -1,10 +1,12 @@
 import { DownOutlined } from "@ant-design/icons";
-import { Dropdown, Space, message } from "antd";
+import { Avatar, Dropdown, Space, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import './Account.scss'
 import { callLogout } from "../../services/api";
 import { doLogoutAction } from "../../redux/account/accountSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import { UserOutlined } from '@ant-design/icons';
 
 const Account = () => {
 
@@ -34,6 +36,19 @@ const Account = () => {
             onClick: () => hanldeLogout()
         }
     ];
+    if (user.role === 'ADMIN' && window.location.pathname.startsWith('/admin')) {
+        items.unshift({
+            label: <Link to='/admin'>Trang quản trị</Link>,
+            key: 'admin'
+        })
+    } else if (user.role === 'ADMIN' && window.location.pathname.startsWith('/')) {
+        items.unshift({
+            label: <Link to='/'>Trang chủ</Link>,
+            key: 'home'
+        })
+    }
+
+    const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`
     return (
         <div className="account">
             <Dropdown menu={{ items }} trigger={['click']}>
@@ -43,9 +58,14 @@ const Account = () => {
                             ?
                             <>Tài khoản</>
                             :
-                            <>{user.fullName}</>
+                            <>
+                                <Avatar
+                                    size="large"
+                                    icon={<UserOutlined />}
+                                    src={urlAvatar} />
+                                {user.fullName}
+                            </>
                         }
-                        <DownOutlined />
                     </Space>
                 </a>
             </Dropdown>
