@@ -11,6 +11,7 @@ import { IoAddCircleOutline } from "react-icons/io5";
 import { FaEye } from "react-icons/fa";
 import DetailUser from './DetailUser/DetailUser';
 import CreateNewUser from './CreateNewUser/CreateNewUser';
+import ImportUser from './ImportUser/ImportUser';
 
 const getRandomuserParams = (params) => ({
     results: pageSize,
@@ -35,6 +36,7 @@ const User = () => {
     const [dataUserDetail, setDataUserDetail] = useState("");
 
     const [isOpenNewUser, setIsOpenNewUser] = useState(false);
+    const [isOpenImportUser, setIsOpenImportUser] = useState(false);
 
     const columns = [
         {
@@ -152,6 +154,7 @@ const User = () => {
     const handleNewUser = () => {
         setIsOpenNewUser(true);
     }
+
     return (
         <>
             <Row gutter={[20, 20]}>
@@ -181,7 +184,8 @@ const User = () => {
                                 <> </>Export
                             </Button>
                             <Button type='primary'
-                                icon={<CiImport />}>
+                                icon={<CiImport />}
+                                onClick={() => setIsOpenImportUser(true)}>
                                 <> </>Import
                             </Button>
                             <Button type='primary'
@@ -224,7 +228,10 @@ const User = () => {
                 setIsOpenNewUser={setIsOpenNewUser}
                 fetchData={fetchData}
             />
-
+            <ImportUser
+                isOpenImportUser={isOpenImportUser}
+                setIsOpenImportUser={setIsOpenImportUser}
+            />
         </>
     )
 }
