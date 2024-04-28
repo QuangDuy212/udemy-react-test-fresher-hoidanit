@@ -1,24 +1,28 @@
-import React, { useState } from 'react';
-import { Button, Modal, message, Upload, Space, Table, Tag } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Modal, message, Upload, Space, Table, Tag, notification } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
+import { callBulkCreateUser } from '../../../../services/api';
+import templateUrl from './data/userImport.xlsx?url'
 
 const { Dragger } = Upload;
 
 const ImportUser = (props) => {
     const { isOpenImportUser, setIsOpenImportUser } = props;
 
-    const [data, setData] = useState("");
+    const [dataExcel, setDataExcel] = useState([]);
+    const [start, setStart] = useState(false);
+
+    useEffect(() => {
+        setStart(!start);
+    }, [isOpenImportUser])
 
     const showModal = () => {
         setIsOpenImportUser(true);
     };
 
-    const handleOk = () => {
-        setIsOpenImportUser(false);
-    };
-
     const handleCancel = () => {
+        setDataExcel([]);
         setIsOpenImportUser(false);
     };
 
@@ -41,7 +45,6 @@ const ImportUser = (props) => {
         onChange(info) {
             const { status } = info.file;
             if (status !== 'uploading') {
-                console.log(info.file, info.fileList);
             }
             if (status === 'done') {
                 const file = info.fileList[0].originFileObj;
@@ -59,7 +62,7 @@ const ImportUser = (props) => {
                         range: 1
                     });
                     if (jsonData && jsonData.length > 0)
-                        setData(jsonData);
+                        setDataExcel(jsonData);
                 };
                 reader.readAsArrayBuffer(file);
                 message.success(`${info.file.name} file uploaded successfully.`);
@@ -70,6 +73,7 @@ const ImportUser = (props) => {
         onDrop(e) {
             console.log('Dropped files', e.dataTransfer.files);
         },
+        defaultFileList: []
     };
 
 
@@ -98,15 +102,41 @@ const ImportUser = (props) => {
             </div>
         )
     }
+
+    const handleSubmit = async () => {
+        const data = dataExcel.map(item => {
+            item.password = '123456';
+            return item;
+        })
+        const res = await callBulkCreateUser(data);
+        setIsOpenImportUser(false);
+        if (res.data) {
+            notification.success({
+                description: `Success: ${res.data.countSuccess}, Error:${res.data.countError} `,
+                message: "Upload thành công",
+            })
+            setDataExcel([]);
+            setIsOpenImportUser(false);
+            props.fetchUser();
+        } else {
+            notification.error({
+                description: res.message,
+                message: "Đã có lỗi xảy ra"
+            })
+        }
+    }
     return (
         <>
             <Modal
                 title="Import User"
                 open={isOpenImportUser}
-                onOk={handleOk}
+                onOk={handleSubmit}
                 onCancel={handleCancel}
                 okText={'Import'}
                 maskClosable={false}
+                okButtonProps={
+                    { disabled: dataExcel.length < 1 }
+                }
             >
                 <Dragger {...propsUpload}>
                     <p className="ant-upload-drag-icon">
@@ -114,13 +144,18 @@ const ImportUser = (props) => {
                     </p>
                     <p className="ant-upload-text">Click or drag file to this area to upload</p>
                     <p className="ant-upload-hint">
-                        Support for a single upload. Only accept .csv, .xls, .xlsx
+                        Support for a single upload. Only accept .csv, .xls, .xlsx<> </>
+                        <a
+                            onClick={(e) => e.stopPropagation()}
+                            href={templateUrl}
+                            download
+                        >Dowload Sample File</a>
                     </p>
                 </Dragger>
                 <Table
                     columns={columns}
                     title={renderHeader}
-                    dataSource={data}
+                    dataSource={dataExcel}
                 />
             </Modal>
         </>

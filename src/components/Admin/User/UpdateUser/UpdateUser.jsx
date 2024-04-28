@@ -1,39 +1,42 @@
-import React, { useState } from 'react';
-import { Button, Checkbox, Form, Input, Modal, message, notification } from 'antd';
-import { callRegister } from '../../../../services/api';
-import { useForm } from 'antd/es/form/Form';
+import React, { useEffect, useState } from 'react';
+import { Button, Form, Input, Modal, notification } from 'antd';
+import { callUpdateUser } from '../../../../services/api';
 
-const CreateNewUser = (props) => {
-    const { isOpenNewUser, setIsOpenNewUser, fetchData } = props;
+const UpdateUser = (props) => {
+    //PROPS:
+    const { fetchUser, isOpenUpdateUser, setIsOpenUpdateUser, dataUpdate } = props;
+
+    //STATE: 
     const [isSubmit, setIsSubmit] = useState(false);
     const [form] = Form.useForm();
 
-    const onFinish = async (values) => {
-        const { fullName, email, phone, password } = values;
-        setIsSubmit(true);
-        const res = await callRegister(fullName, email, phone, password);
-        setIsSubmit(false);
-        if (res?.data && res?.data?._id) {
-            message.success("Đăng kí tài khoản thành công!");
-            await fetchData();
-            setIsOpenNewUser(false);
-            form.resetFields();
-        } else {
-            notification.error({
-                message: "Có lỗi xảy ra",
-                description:
-                    res.message && Array.isArray(res.message) ? res.message[0] : res.message,
-                duration: 5
-            })
-        }
-    };
+    //METHOD: 
+    useEffect(() => {
+        form.setFieldsValue(dataUpdate)
+    }, [dataUpdate])
 
-    const onFinishFailed = (values) => {
-        console.log(">>> submit error: ", values);
+    const onFinish = async (values) => {
+        const { fullName, phone } = values;
+        const id = dataUpdate._id;
+        const res = await callUpdateUser(id, fullName, phone);
+        if (res && res?.data) {
+            notification.success({
+                description: "Cập nhật tài khoản thành công!"
+            }
+            );
+            await fetchUser();
+            setIsOpenUpdateUser(false);
+        } else {
+            notification.error({ description: "Cập nhật tài khoản có lỗi xảy ra!" });
+        }
+    }
+
+    const onFinishFailed = (error) => {
+        console.log(">>> check error: ", error)
     }
 
     const showModal = () => {
-        setIsOpenNewUser(true);
+        setIsOpenUpdateUser(true);
     };
 
     const handleOk = () => {
@@ -41,22 +44,16 @@ const CreateNewUser = (props) => {
     };
 
     const handleCancel = () => {
-        setIsOpenNewUser(false);
+        setIsOpenUpdateUser(false);
     };
-
-
 
     return (
         <>
             <Modal
-                title="Thêm mới người dùng"
-                open={isOpenNewUser}
+                title="Basic Modal"
+                open={isOpenUpdateUser}
                 onOk={handleOk}
                 onCancel={handleCancel}
-                maskClosable={false}
-                okText={"Tạo mới"}
-                cancelText={"Hủy"}
-                confirmLoading={isSubmit}
             >
                 <Form
                     name="basic"
@@ -84,16 +81,7 @@ const CreateNewUser = (props) => {
                         name="email"
                         rules={[{ required: true, message: 'Please input your email!' }]}
                     >
-                        <Input />
-                    </Form.Item>
-
-                    <Form.Item
-                        labelCol={{ span: 24 }}
-                        label='Password'
-                        name="password"
-                        rules={[{ required: true, message: 'Please input your password!' }]}
-                    >
-                        <Input.Password />
+                        <Input disabled />
                     </Form.Item>
 
                     <Form.Item
@@ -105,9 +93,9 @@ const CreateNewUser = (props) => {
                         <Input />
                     </Form.Item>
                 </Form>
-            </Modal >
+            </Modal>
         </>
     );
 };
 
-export default CreateNewUser;
+export default UpdateUser;

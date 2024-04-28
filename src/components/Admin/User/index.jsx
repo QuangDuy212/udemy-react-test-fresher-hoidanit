@@ -12,6 +12,11 @@ import { FaEye } from "react-icons/fa";
 import DetailUser from './DetailUser/DetailUser';
 import CreateNewUser from './CreateNewUser/CreateNewUser';
 import ImportUser from './ImportUser/ImportUser';
+import moment from 'moment';
+import { ImTelegram } from 'react-icons/im';
+import * as XLSX from 'xlsx';
+import { LuPenLine } from "react-icons/lu";
+import UpdateUser from './UpdateUser/UpdateUser';
 
 const getRandomuserParams = (params) => ({
     results: pageSize,
@@ -38,33 +43,50 @@ const User = () => {
     const [isOpenNewUser, setIsOpenNewUser] = useState(false);
     const [isOpenImportUser, setIsOpenImportUser] = useState(false);
 
+    const [isOpenUpdateUser, setIsOpenUpdateUser] = useState(false);
+    const [dataUpdate, setDataUpdate] = useState({});
+
     const columns = [
         {
             title: 'ID',
             dataIndex: '_id',
             width: "20%",
+            key: 'id',
         },
         {
             title: 'Tên hiển thị',
             dataIndex: 'fullName',
             sorter: true,
-            width: "20%",
+            width: "10%",
+            key: "fullName"
         },
         {
             title: 'Email',
             dataIndex: 'email',
             sorter: true,
             width: "20%",
+            key: "fullName"
+
         },
         {
             title: 'Phone',
             dataIndex: 'phone',
             sorter: true,
             width: "20%",
+            key: "phone"
         },
         {
-            title: 'Action',
+            title: 'Updated At',
+            dataIndex: "updatedAt",
+            sorter: true,
             width: "20%",
+            key: "updatedAt",
+        },
+
+        {
+            title: 'Action',
+            width: "10%",
+            key: "action",
             render: (text, record, index) => {
                 return (
                     <>
@@ -76,6 +98,12 @@ const User = () => {
                                 onClick={() => handleOnView(record)}>
                                 <FaEye />
                             </span>
+                            <span
+                                className='update-btn'
+                                onClick={() => handleUpdate(record)}
+                            >
+                                <LuPenLine />
+                            </span>
                         </div>
                     </>
                 )
@@ -86,12 +114,12 @@ const User = () => {
 
     // FUNCTION: 
 
-    // 1. fetchdata:
+    // 1. fetchUser:
     useEffect(() => {
-        fetchData();
+        fetchUser();
     }, [current, pageSize, querySearch, sortQuery]);
 
-    const fetchData = async () => {
+    const fetchUser = async () => {
         setLoading(true);
         let query = `?current=${current}&pageSize=${pageSize}`;
 
@@ -140,7 +168,7 @@ const User = () => {
 
     // 3. handle button
     const handleOnReset = () => {
-        fetchData("");
+        fetchUser("");
         setIsSearch(false);
         setQuerySearch("");
         setSortQuery("");
@@ -155,12 +183,28 @@ const User = () => {
         setIsOpenNewUser(true);
     }
 
+    const handleExportData = () => {
+        if (data.length > 0) {
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+            //let buffer = XLSX.write(workbook, { bookType: "xlsx", type: "buffer" });
+            //XLSX.write(workbook, { bookType: "xlsx", type: "binary" });
+            XLSX.writeFile(workbook, "ExportUser.csv");
+        }
+    }
+
+    const handleUpdate = (user) => {
+        setIsOpenUpdateUser(true);
+        setDataUpdate(user);
+    }
+
     return (
         <>
             <Row gutter={[20, 20]}>
                 <Col span={24}>
                     <SearchUser
-                        fetchData={fetchData}
+                        fetchUser={fetchUser}
                         setIsSearch={setIsSearch}
                         setQuerySearch={setQuerySearch}
                     />
@@ -180,7 +224,8 @@ const User = () => {
                             ></Button>
                             <Button
                                 type='primary'
-                                icon={<CiExport />}>
+                                icon={<CiExport />}
+                                onClick={() => handleExportData()}>
                                 <> </>Export
                             </Button>
                             <Button type='primary'
@@ -214,7 +259,6 @@ const User = () => {
                         }
                         loading={loading}
                         onChange={handleTableChange}
-
                     />
                 </Col>
             </Row>
@@ -226,11 +270,18 @@ const User = () => {
             <CreateNewUser
                 isOpenNewUser={isOpenNewUser}
                 setIsOpenNewUser={setIsOpenNewUser}
-                fetchData={fetchData}
+                fetchUser={fetchUser}
             />
             <ImportUser
+                fetchUser={fetchUser}
                 isOpenImportUser={isOpenImportUser}
                 setIsOpenImportUser={setIsOpenImportUser}
+            />
+            <UpdateUser
+                fetchUser={fetchUser}
+                isOpenUpdateUser={isOpenUpdateUser}
+                setIsOpenUpdateUser={setIsOpenUpdateUser}
+                dataUpdate={dataUpdate}
             />
         </>
     )

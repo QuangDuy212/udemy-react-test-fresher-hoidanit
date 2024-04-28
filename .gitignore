@@ -9,6 +9,8 @@ lerna-debug.log*
 
 package-lock.json
 
+userImport.xlsx
+
 node_modules
 dist
 dist-ssr

@@ -18,14 +18,14 @@ const Account = () => {
     const hanldeLogout = async () => {
         if (!isAuthenticated) return;
         const res = await callLogout();
-        if (res && res.data) {
+        if (res && res?.data) {
             dispatch(doLogoutAction());
             message.success("Đăng xuất thành công!");
             navigate("/");
         }
     }
 
-    const items = [
+    const itemsAuth = [
         {
             label: "Quản lý tài khoản",
             key: '0',
@@ -37,16 +37,31 @@ const Account = () => {
         }
     ];
     if (user.role === 'ADMIN' && window.location.pathname.startsWith('/admin')) {
-        items.unshift({
+        itemsAuth.unshift({
             label: <Link to='/admin'>Trang quản trị</Link>,
             key: 'admin'
         })
     } else if (user.role === 'ADMIN' && window.location.pathname.startsWith('/')) {
-        items.unshift({
+        itemsAuth.unshift({
             label: <Link to='/'>Trang chủ</Link>,
             key: 'home'
         })
     }
+
+    const itemsNotAuth = [
+        {
+            label: <Link to='/register'>Đăng kí</Link>,
+            key: 'register',
+        },
+        {
+            label: <Link to='/login'>Đăng nhập</Link>,
+            key: 'login',
+        },
+    ]
+
+    const items = isAuthenticated ? itemsAuth : itemsNotAuth
+
+
 
     const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`
     return (

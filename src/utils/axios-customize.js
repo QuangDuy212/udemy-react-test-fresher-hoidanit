@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment";
 
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -32,6 +33,16 @@ const NO_RETRY_HEADER = 'x-no-retry'
 instance.interceptors.response.use(function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
+    if (response?.data && response?.data?.data && response?.data?.data?.result) {
+        let result = response?.data?.data?.result;
+        result.map(item => {
+            let tmp1 = moment(item.createdAt).format('DD-MM-YYYY HH:mm:ss');
+            let tmp2 = moment(item.updatedAt).format('DD-MM-YYYY HH:mm:ss');
+            item.createdAt = tmp1;
+            item.updatedAt = tmp2;
+            return item;
+        })
+    }
     return response && response.data ? response.data : response;
 }, async function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
