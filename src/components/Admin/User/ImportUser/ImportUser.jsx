@@ -114,6 +114,7 @@ const ImportUser = (props) => {
             notification.success({
                 description: `Success: ${res.data.countSuccess}, Error:${res.data.countError} `,
                 message: "Upload thành công",
+                duration: 1
             })
             setDataExcel([]);
             setIsOpenImportUser(false);
@@ -121,7 +122,8 @@ const ImportUser = (props) => {
         } else {
             notification.error({
                 description: res.message,
-                message: "Đã có lỗi xảy ra"
+                message: "Đã có lỗi xảy ra",
+                duration: 1
             })
         }
     }

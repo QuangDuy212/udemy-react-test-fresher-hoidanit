@@ -1,8 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
 import './index.scss';
-import { Button, Col, Divider, Row, Table } from 'antd';
-import { callGetUserWithPaginate } from '../../../services/api';
+import { Button, Col, ConfigProvider, Divider, Popover, Row, Table, notification } from 'antd';
+import { callDeleteUser, callGetUserWithPaginate } from '../../../services/api';
 import { MdDelete } from "react-icons/md";
 import SearchUser from './Search/SearchUser';
 import { GrPowerReset } from "react-icons/gr";
@@ -17,6 +17,7 @@ import { ImTelegram } from 'react-icons/im';
 import * as XLSX from 'xlsx';
 import { LuPenLine } from "react-icons/lu";
 import UpdateUser from './UpdateUser/UpdateUser';
+import { MdInfoOutline } from "react-icons/md";
 
 const getRandomuserParams = (params) => ({
     results: pageSize,
@@ -46,6 +47,14 @@ const User = () => {
     const [isOpenUpdateUser, setIsOpenUpdateUser] = useState(false);
     const [dataUpdate, setDataUpdate] = useState({});
 
+
+    const titleDelete = (
+        <>
+            <span className='del-title'><MdInfoOutline className='del-icon' />
+                <> </> Xác nhận xóa
+            </span>
+        </>
+    )
     const columns = [
         {
             title: 'ID',
@@ -91,9 +100,26 @@ const User = () => {
                 return (
                     <>
                         <div className='action'>
-                            <span className='del-btn'>
-                                <MdDelete />
-                            </span>
+                            <ConfigProvider>
+                                <Popover
+                                    placement="rightTop"
+                                    title={titleDelete}
+                                    trigger={"click"}
+                                    content={
+                                        <div className='del-content'>
+                                            <Button
+                                                type='primary'
+                                                className='confirm'
+                                                onClick={() => handleDelete(record._id)}
+                                            >Xác nhận</Button>
+                                        </div>
+                                    }
+                                >
+                                    <span className='del-btn'>
+                                        <MdDelete />
+                                    </span>
+                                </Popover>
+                            </ConfigProvider>
                             <span className='view-btn'
                                 onClick={() => handleOnView(record)}>
                                 <FaEye />
@@ -197,6 +223,22 @@ const User = () => {
     const handleUpdate = (user) => {
         setIsOpenUpdateUser(true);
         setDataUpdate(user);
+    }
+
+    const handleDelete = async (id) => {
+        const res = await callDeleteUser(id);
+        if (res && res?.data) {
+            notification.success({
+                description: "Xóa người dùng thành công!",
+                duration: 1
+            });
+            fetchUser();
+        } else {
+            notification.error({
+                description: "Lỗi xóa người!",
+                duration: 1
+            })
+        }
     }
 
     return (

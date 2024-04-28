@@ -9,6 +9,23 @@
 
 }
 
+.del-title {
+    display        : flex;
+    align-items    : center;
+    justify-content: center;
+
+    .del-icon {
+        color    : #f9e154;
+        font-size: 20px;
+    }
+}
+
+.del-content {
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
+}
+
 .action {
     display        : flex;
     align-content  : center;

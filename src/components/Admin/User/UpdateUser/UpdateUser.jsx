@@ -16,18 +16,21 @@ const UpdateUser = (props) => {
     }, [dataUpdate])
 
     const onFinish = async (values) => {
-        const { fullName, phone } = values;
-        const id = dataUpdate._id;
-        const res = await callUpdateUser(id, fullName, phone);
+        const { _id, fullName, phone } = values;
+        const res = await callUpdateUser(_id, fullName, phone);
         if (res && res?.data) {
             notification.success({
-                description: "Cập nhật tài khoản thành công!"
+                description: "Cập nhật tài khoản thành công!",
+                duration: 1
             }
             );
             await fetchUser();
             setIsOpenUpdateUser(false);
         } else {
-            notification.error({ description: "Cập nhật tài khoản có lỗi xảy ra!" });
+            notification.error({
+                description: "Cập nhật tài khoản có lỗi xảy ra!",
+                duration: 1
+            });
         }
     }
 
@@ -67,6 +70,15 @@ const UpdateUser = (props) => {
                     className='register-body__content'
                     form={form}
                 >
+                    <Form.Item
+                        labelCol={{ span: 24 }}
+                        hidden
+                        label='ID'
+                        name="_id"
+                        rules={[{ required: true, message: 'Please input your fullName!' }]}
+                    >
+                        <Input />
+                    </Form.Item>
                     <Form.Item
                         labelCol={{ span: 24 }}
                         label='Full name'

@@ -37,13 +37,28 @@ const Account = () => {
         }
     ];
     if (user.role === 'ADMIN' && window.location.pathname.startsWith('/admin')) {
-        itemsAuth.unshift({
+        const tmp = {
             label: <Link to='/admin'>Trang quản trị</Link>,
             key: 'admin'
-        })
-    } else if (user.role === 'ADMIN' && window.location.pathname.startsWith('/')) {
+        }
+        if (itemsAuth.includes(tmp)) {
+            itemsAuth.filter(item => item != tmp)
+        }
         itemsAuth.unshift({
             label: <Link to='/'>Trang chủ</Link>,
+            key: 'home'
+        })
+    }
+    else if (user.role === 'ADMIN' && window.location.pathname == '/') {
+        const tmp = {
+            label: <Link to='/'>Trang chủ</Link>,
+            key: 'home'
+        }
+        if (itemsAuth.includes(tmp)) {
+            itemsAuth.filter(item => item != tmp)
+        }
+        itemsAuth.unshift({
+            label: <Link to='/admin'>Trang quản trị</Link>,
             key: 'home'
         })
     }
