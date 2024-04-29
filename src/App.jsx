@@ -20,6 +20,7 @@ import LayoutAdmin from './components/Admin/LayoutAdmin';
 import DashboardAdmin from './pages/admin';
 import BookPage from './pages/book';
 import User from './components/Admin/User';
+import Book from './components/Admin/Book';
 
 const Layout = () => {
   return (
@@ -93,7 +94,7 @@ export default function App() {
         },
         {
           path: "book",
-          element: <BookPage />,
+          element: <Book />,
         },
         {
           path: "order",
