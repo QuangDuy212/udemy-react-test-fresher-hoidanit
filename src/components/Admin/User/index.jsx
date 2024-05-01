@@ -229,12 +229,14 @@ const User = () => {
         const res = await callDeleteUser(id);
         if (res && res?.data) {
             notification.success({
+                message: "Thành công!",
                 description: "Xóa người dùng thành công!",
                 duration: 1
             });
             fetchUser();
         } else {
             notification.error({
+                message: "Có lỗi xảy ra!",
                 description: "Lỗi xóa người!",
                 duration: 1
             })

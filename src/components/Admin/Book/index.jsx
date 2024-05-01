@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, ConfigProvider, Divider, Popover, Row, Table, notification } from 'antd';
-import { callGetBookWithPaginate } from '../../../services/api';
+import { callDeleteABook, callGetBookWithPaginate } from '../../../services/api';
 import SearchBook from './Search/SearchBook';
 import { GrPowerReset } from 'react-icons/gr';
 import { CiExport, CiImport } from 'react-icons/ci';
@@ -185,6 +185,23 @@ const Book = () => {
 
     const handleExportData = () => {
 
+    }
+    const handleDelete = async (id) => {
+        const res = await callDeleteABook(id);
+        if (res && res.data) {
+            notification.success({
+                message: "Thành công!",
+                description: "Xóa thành công!",
+                duration: 1,
+            })
+            await fetchBook();
+        } else {
+            notification.error({
+                message: "Lỗi!",
+                description: "Có lỗi xảy ra!",
+                duration: 1
+            })
+        }
     }
 
     const handleNewBook = () => {

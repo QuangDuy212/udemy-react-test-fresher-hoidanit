@@ -14,9 +14,10 @@ import {
     notification,
     Image, Upload
 } from 'antd';
-import { callCreateABook, callFetchCategory, callRegister, callUploadBookImg } from '../../../../services/api';
+import { callFetchCategory, callUpdateABook, callUploadBookImg } from '../../../../services/api';
 import { useForm } from 'antd/es/form/Form';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { v4 as uuidv4 } from 'uuid';
 
 const UpdateBook = (props) => {
     const { isOpenUpdateBook, setIsOpenUpdateBook, fetchBook, dataUpdate } = props;
@@ -24,12 +25,9 @@ const UpdateBook = (props) => {
     const [listCategory, setListCategory] = useState([]);
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
-    const [thumbnail, setThumbnail] = useState([]);
-    const [slider, setSlider] = useState([]);
-
-    const [thumbnailView, setThumbnailView] = useState([]);
-    const [sliderView, setSliderView] = useState([]);
-
+    const [dataThumbnail, setDataThumbnail] = useState([]);
+    const [dataSlider, setDataSlider] = useState([]);
+    const [initForm, setInitForm] = useState({});
     const [form] = Form.useForm();
 
     useEffect(() => {
@@ -47,8 +45,40 @@ const UpdateBook = (props) => {
 
         fetchCategory();
         if (dataUpdate) {
-            setThumbnail(dataUpdate?.thumbnail);
-            setSlider(dataUpdate?.slider);
+            const arrThumbnail = [{
+                uid: uuidv4(),
+                name: dataUpdate.thumbnail,
+                status: 'done',
+                url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${dataUpdate.thumbnail}`,
+            }]
+
+            const arrSlider = dataUpdate?.slider?.map((item, index) => {
+                return {
+                    uid: uuidv4(),
+                    name: item,
+                    status: 'done',
+                    url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${item}`,
+                }
+            })
+
+            const init = {
+                _id: dataUpdate._id,
+                mainText: dataUpdate.mainText,
+                author: dataUpdate.author,
+                price: dataUpdate.price,
+                category: dataUpdate.category,
+                quantity: dataUpdate.quantity,
+                sold: dataUpdate.sold,
+                thumbnail: { fileList: arrThumbnail },
+                slider: { fileList: arrSlider }
+            }
+            setInitForm(init);
+            setDataThumbnail(dataUpdate?.thumbnail);
+            setDataSlider(dataUpdate?.slider);
+            form.setFieldsValue(init);
+        }
+        return () => {
+            form.resetFields();
         }
     }, [dataUpdate])
 
@@ -106,10 +136,9 @@ const UpdateBook = (props) => {
     const handleUploadFileThumbnail = async ({ file, onSuccess, onError }) => {
         const res = await callUploadBookImg(file);
         if (res && res.data) {
-            setThumbnail([{
-                name: res.data.fileUploaded,
-                uid: file.uid
-            }])
+            setDataThumbnail([
+                res.data.fileUploaded,
+            ])
             onSuccess('ok');
         }
         else {
@@ -120,10 +149,7 @@ const UpdateBook = (props) => {
     const handleUploadFileSlider = async ({ file, onSuccess, onError }) => {
         const res = await callUploadBookImg(file);
         if (res && res.data) {
-            setSlider(slider => [...slider, {
-                name: res.data.fileUploaded,
-                uid: file.uid
-            }])
+            setDataSlider(slider => [...slider, res.data.fileUploaded])
             onSuccess('ok');
         }
         else {
@@ -133,53 +159,53 @@ const UpdateBook = (props) => {
 
     const handleOnRemove = (file, type) => {
         if (type === 'thumbnail') {
-            setThumbnail([]);
+            setDataThumbnail([]);
         }
         if (type === 'slider') {
             const newSlider = slider.filter(x => x.uid != file.uid);
-            setSlider(newSlider);
+            setDataSlider(newSlider);
         }
     }
 
 
     const onFinish = async (values) => {
-        if (thumbnail.length === 0) {
+        if (dataThumbnail.length === 0) {
             notification.error({
                 description: "Vui lòng upload ảnh thumbnail!",
                 message: "Lỗi validate",
             })
             return;
         }
-        if (slider.length === 0) {
+        if (dataSlider.length === 0) {
             notification.error({
                 description: "Vui lòng upload ảnh slider!",
                 message: "Lỗi validate",
             })
             return;
         }
-        return;
-        // const { mainText, author, price, sold, quantity, category } = values;
-        // const dataSlider = slider.map(item => item.name);
-        // const data = { thumbnail: thumbnail[0].name, slider: dataSlider, author, mainText, price, sold, quantity, category };
-        // const res = await callCreateABook(data);
-        // if (res && res?.data) {
-        //     notification.success({
-        //         message: "Thành công!",
-        //         description: "Thêm mới sách thành công!",
-        //         duration: 1
-        //     })
-        //     await fetchBook();
-        //     setIsOpenNewBook(false);
-        //     form.resetFields();
-        //     setThumbnail([]);
-        //     setSlider([]);
-        // } else {
-        //     notification.error({
-        //         message: "Lỗi thông tin!",
-        //         description: res?.message[0],
-        //         duration: 1
-        //     })
-        // }
+        const { mainText, author, price, sold, quantity, category, _id } = values;
+        const thumbnail = dataThumbnail;
+        const slider = dataSlider;
+        const res = await callUpdateABook(_id, mainText, thumbnail, slider, author, price, quantity, category);
+        if (res && res?.data) {
+            notification.success({
+                message: "Thành công!",
+                description: "Thêm mới sách thành công!",
+                duration: 1
+            })
+            await fetchBook();
+            setIsOpenUpdateBook(false);
+            setDataThumbnail([]);
+            setDataSlider([]);
+            setInitForm({});
+            form.resetFields();
+        } else {
+            notification.error({
+                message: "Lỗi thông tin!",
+                description: res?.message[0],
+                duration: 1
+            })
+        }
     };
 
     const onFinishFailed = (values) => {
@@ -187,7 +213,7 @@ const UpdateBook = (props) => {
     }
 
     const showModal = () => {
-        setIsOpenNewBook(true);
+        setIsOpenUpdateBook(true);
     };
 
     const handleOk = () => {
@@ -195,10 +221,10 @@ const UpdateBook = (props) => {
     };
 
     const handleCancel = () => {
-        setIsOpenNewBook(false);
+        setIsOpenUpdateBook(false);
         form.resetFields();
-        setThumbnail([]);
-        setSlider([]);
+        setDataThumbnail([]);
+        setDataSlider([]);
     };
 
     const handleChangeSelect = () => {
@@ -211,7 +237,7 @@ const UpdateBook = (props) => {
         <>
             <Modal
                 title="Cập nhật sách"
-                open={isOpenNewBook}
+                open={isOpenUpdateBook}
                 onOk={handleOk}
                 onCancel={handleCancel}
                 maskClosable={false}
@@ -235,6 +261,15 @@ const UpdateBook = (props) => {
                 >
                     <Row gutter={15}>
                         <Col span={12} >
+                            <Form.Item
+                                labelCol={{ span: 24 }}
+                                label='ID'
+                                name="_id"
+                                hidden
+                                rules={[{ required: true, message: 'Vui lòng nhập tên sách!' }]}
+                            >
+                                <Input />
+                            </Form.Item>
                             <Form.Item
                                 labelCol={{ span: 24 }}
                                 label='Tên sách'
@@ -321,6 +356,7 @@ const UpdateBook = (props) => {
                                     multiple={false}
                                     maxCount={1}
                                     onRemove={(file) => handleOnRemove(file, 'thumbnail')}
+                                    defaultFileList={initForm?.thumbnail?.fileList ?? []}
                                 >
 
                                     <button style={{ border: 0, background: 'none' }} type="button">
@@ -356,15 +392,15 @@ const UpdateBook = (props) => {
                                     beforeUpload={beforeUpload}
                                     onChange={(info) => handleChange(info, 'slider')}
                                     onRemove={(file) => handleOnRemove(file, 'slider')}
-
+                                    defaultFileList={initForm?.slider?.fileList ?? []}
                                 >
-                                    {slider.length >= 8 ? null :
-                                        <button style={{ border: 0, background: 'none' }} type="button">
+                                    {/* {slider.length >= 8 ? null : */}
+                                    <button style={{ border: 0, background: 'none' }} type="button">
 
-                                            {/* {loadingSlider ? <LoadingOutlined /> : <PlusOutlined />} */}
-                                            <PlusOutlined />
-                                            <div style={{ marginTop: 8 }}>Upload</div>
-                                        </button>}
+                                        {/* {loadingSlider ? <LoadingOutlined /> : <PlusOutlined />} */}
+                                        <PlusOutlined />
+                                        <div style={{ marginTop: 8 }}>Upload</div>
+                                    </button>
                                 </Upload>
                             </Form.Item>
                             {previewImage && (
