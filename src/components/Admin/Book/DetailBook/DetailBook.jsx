@@ -8,40 +8,45 @@ import { ImTab } from 'react-icons/im';
 
 const DetailBook = (props) => {
 
-    const { data, isOpenBookDetail, setIsOpenBookDetail } = props;
+    const { dataBookDetail, setDataBookDetail, isOpenBookDetail, setIsOpenBookDetail } = props;
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
-    const [fileList, setFileList] = useState([
-        {
-            uid: '-1',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-    ]);
+    const [fileList, setFileList] = useState([]);
 
     useEffect(() => {
         handleMergeImg();
-    }, [isOpenBookDetail])
+    }, [dataBookDetail])
 
     const handleMergeImg = () => {
-        let img = [data.slider];
-        if (Array.isArray(img[0])) {
-            img[0].unshift(data.thumbnail)
-            const dataImg = img[0].map((item, index) => {
-                return {
+        if (dataBookDetail) {
+            let imgThumbnail = {};
+            let imgSlider = [];
+            if (dataBookDetail.thumbnail) {
+                imgThumbnail = {
                     uid: uuidv4(),
-                    name: `image${index}.jpg`,
+                    name: dataBookDetail.thumbnail,
                     status: 'done',
-                    url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${item}`,
+                    url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${dataBookDetail.thumbnail}`,
                 }
-            })
-            setFileList(dataImg);
+            }
+            if (dataBookDetail.slider && dataBookDetail.slider.length > 0) {
+                dataBookDetail.slider.map(item => {
+                    imgSlider.push({
+                        uid: uuidv4(),
+                        name: item,
+                        status: 'done',
+                        url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${item}`,
+                    })
+                })
+            }
+            setFileList([imgThumbnail, ...imgSlider]);
         }
+
     }
 
     const onClose = () => {
         setIsOpenBookDetail(false);
+        setDataBookDetail("");
     }
 
     const getBase64 = (file) =>
@@ -81,18 +86,20 @@ const DetailBook = (props) => {
                     bordered
                     column={{ xs: 1, sm: 1, md: 1, lg: 2, xl: 2, xxl: 2 }}
                 >
-                    <Descriptions.Item label="ID">{data._id}</Descriptions.Item>
-                    <Descriptions.Item label="Tên sách">{data.mainText}</Descriptions.Item>
-                    <Descriptions.Item label="Tác giả">{data.author}</Descriptions.Item>
-                    <Descriptions.Item label="Giá tiền">{data.price}</Descriptions.Item>
+                    <Descriptions.Item label="ID">{dataBookDetail._id}</Descriptions.Item>
+                    <Descriptions.Item label="Tên sách">{dataBookDetail.mainText}</Descriptions.Item>
+                    <Descriptions.Item label="Tác giả">{dataBookDetail.author}</Descriptions.Item>
+                    <Descriptions.Item label="Giá tiền">{dataBookDetail.price}</Descriptions.Item>
+                    <Descriptions.Item label="Số lượng">{dataBookDetail.quantity}</Descriptions.Item>
+                    <Descriptions.Item label="Đã bán">{dataBookDetail.sold}</Descriptions.Item>
                     <Descriptions.Item label="Thể loại" span={2}>
-                        <Badge status="processing" text={data.category} />
+                        <Badge status="processing" text={dataBookDetail.category} />
                     </Descriptions.Item>
                     <Descriptions.Item label="Create at ">
-                        {data.createdAt}
+                        {dataBookDetail.createdAt}
                     </Descriptions.Item>
                     <Descriptions.Item label="Update at ">
-                        {data.updatedAt}
+                        {dataBookDetail.updatedAt}
                     </Descriptions.Item>
 
 

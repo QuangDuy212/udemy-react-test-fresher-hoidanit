@@ -10,6 +10,8 @@ import { MdDelete } from 'react-icons/md';
 import { FaEye } from 'react-icons/fa';
 import { LuPenLine } from 'react-icons/lu';
 import DetailBook from './DetailBook/DetailBook';
+import CreateNewBook from './CreateNewBook/CreateNewBook';
+import UpdateBook from './UpdateBook/UpdateBook';
 
 
 
@@ -25,6 +27,11 @@ const Book = () => {
 
     const [isOpenBookDetail, setIsOpenBookDetail] = useState(false);
     const [dataBookDetail, setDataBookDetail] = useState({});
+
+    const [isOpenNewBook, setIsOpenNewBook] = useState(false);
+
+    const [isOpenUpdateBook, setIsOpenUpdateBook] = useState(false);
+    const [dataUpdate, setDataUpdate] = useState({});
 
     const fetchBook = async () => {
         setLoading(true);
@@ -164,6 +171,12 @@ const Book = () => {
         setDataBookDetail(data);
     }
 
+    const handleUpdate = (data) => {
+        setDataUpdate(data);
+        setIsOpenUpdateBook(true);
+        console.log(">>> check dataUpdate", data);
+    }
+
     const handleOnReset = () => {
         fetchBook();
         setQuerySearch("");
@@ -175,7 +188,7 @@ const Book = () => {
     }
 
     const handleNewBook = () => {
-
+        setIsOpenNewBook(true);
     }
 
     return (
@@ -236,7 +249,19 @@ const Book = () => {
             <DetailBook
                 isOpenBookDetail={isOpenBookDetail}
                 setIsOpenBookDetail={setIsOpenBookDetail}
-                data={dataBookDetail}
+                dataBookDetail={dataBookDetail}
+                setDataBookDetail={setDataBookDetail}
+            />
+            <CreateNewBook
+                isOpenNewBook={isOpenNewBook}
+                setIsOpenNewBook={setIsOpenNewBook}
+                fetchBook={fetchBook}
+            />
+            <UpdateBook
+                isOpenUpdateBook={isOpenUpdateBook}
+                setIsOpenUpdateBook={setIsOpenUpdateBook}
+                fetchBook={fetchBook}
+                dataUpdate={dataUpdate}
             />
         </>
     );
