@@ -12,6 +12,7 @@ import { LuPenLine } from 'react-icons/lu';
 import DetailBook from './DetailBook/DetailBook';
 import CreateNewBook from './CreateNewBook/CreateNewBook';
 import UpdateBook from './UpdateBook/UpdateBook';
+import * as XLSX from 'xlsx';
 
 
 
@@ -184,7 +185,14 @@ const Book = () => {
     }
 
     const handleExportData = () => {
-
+        if (data.length > 0) {
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+            //let buffer = XLSX.write(workbook, { bookType: "xlsx", type: "buffer" });
+            //XLSX.write(workbook, { bookType: "xlsx", type: "binary" });
+            XLSX.writeFile(workbook, "ExportBook.csv");
+        }
     }
     const handleDelete = async (id) => {
         const res = await callDeleteABook(id);

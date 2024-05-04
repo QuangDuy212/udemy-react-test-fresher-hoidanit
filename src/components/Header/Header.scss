@@ -1,52 +1,30 @@
 .header {
-    display        : flex;
-    justify-content: space-between;
+    display  : flex;
+    max-width: 1500px;
+    margin   : 0 auto;
+
 
     &__title {
         display        : flex;
-        color          : #5495ff;
-        display        : flex;
         justify-content: center;
         align-items    : center;
+        color          : #5495ff;
         cursor         : pointer;
 
 
 
-        &--icon {
-            @media only screen and (min-width: 300px) {
-                display: none;
-            }
-
-            @media only screen and (min-width: 850px) {
-                display: block;
-            }
-
-            font-size: 45px;
-
-        }
-
-        &--text {
-            @media only screen and (min-width: 300px) {
-                display: none;
-            }
-
-            @media only screen and (min-width: 850px) {
-                display: block;
-            }
-
-            font-size: 35px;
+        &--logo {
+            width      : 100%;
+            font-size  : 30px;
+            font-weight: 600;
+            text-align : left;
         }
 
         &--bar {
-            @media only screen and (min-width: 300px) {
-                display: block;
-            }
-
-            @media only screen and (min-width: 850px) {
-                display: none;
-            }
-
-            font-size: 35px;
+            font-size      : 35px;
+            // display     : flex;
+            // justify-self: center;
+            // align-items : center;
 
             .icon {}
 
@@ -56,13 +34,11 @@
     }
 
     &__search {
-        display        : flex;
-        justify-content: center;
-        align-items    : center;
+        display: flex;
 
         input {
-            width        : 80%;
-            padding      : 10px;
+            width        : 100%;
+            padding      : 5px 10px;
             border-radius: 10px;
             margin       : 10px;
         }
@@ -70,10 +46,10 @@
 
     &__feature {
         display        : flex;
-        justify-content: space-around;
-        align-items    : center;
+        justify-content: space-between;
 
         &--cart {
+            display: flex;
 
             padding: 10px;
             cursor : pointer;
@@ -89,14 +65,6 @@
             }
         }
 
-        &--account {
-            @media only screen and (min-width: 300px) {
-                display: none;
-            }
-
-            @media only screen and (min-width: 850px) {
-                display: block;
-            }
-        }
+        &--account {}
     }
 }
