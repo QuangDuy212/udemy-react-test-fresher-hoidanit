@@ -3,6 +3,7 @@
     max-width       : 1500px;
     margin          : 0 auto;
     background-color: #f5f5fa;
+    padding         : 10px;
 
 
     .filter {
@@ -36,7 +37,7 @@
         background   : #fff;
         border-radius: 15px;
         height       : 350px;
-        max-width    : 200px;
+        min-width    : 200px;
 
         &:hover {
             box-shadow       : 0 0.0625rem 20px 0 rgba(0, 0, 0, .05);

@@ -1,11 +1,96 @@
 import './Home.scss'
 import { IoFilter } from "react-icons/io5";
 import { GrPowerReset } from "react-icons/gr";
-import { Button, Col, Form, Row, Checkbox, Divider, InputNumber, Rate, Card, Tabs } from 'antd';
+import { Button, Col, Form, Row, Checkbox, Divider, InputNumber, Rate, Card, Tabs, Pagination } from 'antd';
+import { useEffect, useState } from 'react';
+import { callFetchCategory, callGetBookWithPaginate } from '../../services/api';
 
 
 const { Meta } = Card;
 const Home = () => {
+    const PAGE_SIZE = 8;
+    const [listBook, setListBook] = useState([]);
+    const [current, setCurrent] = useState(1);
+    const [listCategory, setListCategory] = useState([]);
+    const [pageSize, setPageSize] = useState(8);
+    const [total, setTotal] = useState(0);
+
+    const [querySearch, setQuerySearch] = useState("");
+    const [sortQuery, setSortQuery] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const [form] = Form.useForm();
+    useEffect(() => {
+        const fetchCategory = async () => {
+            const res = await callFetchCategory();
+            if (res && res?.data) {
+                let d = [];
+                res.data.map(item => {
+                    let b = { value: item, label: item }
+                    d.push(b);
+                })
+                setListCategory(d);
+            }
+        }
+
+        fetchCategory();
+    }, [])
+
+
+
+    useEffect(() => {
+        fetchBook();
+    }, [current, pageSize, querySearch, sortQuery]);
+
+    const fetchBook = async () => {
+        setLoading(true);
+        let query = `?current=${current}&pageSize=${PAGE_SIZE}`;
+
+        if (querySearch) {
+            query += querySearch;
+        }
+
+        if (sortQuery) {
+            query += sortQuery;
+        }
+        const res = await callGetBookWithPaginate(query);
+        console.log(">>> check res: ", res);
+        if (res && res?.data) {
+            setListBook(res.data.result);
+            setLoading(false);
+            setTotal(res.data.meta.total);
+        }
+    };
+
+    const handleOnChangePage = (pagination,) => {
+        if (pagination && pagination.current !== current)
+            setCurrent(pagination.current);
+        if (pagination && pagination.pageSize !== pageSize) {
+            setCurrent(1);
+            setPageSize(pagination.pageSize);
+        }
+
+        //`dataSource` is useless since `pageSize` changed
+        // if (pagination.pageSize !== pageSize) {
+        //     setListBook([]);
+        // }
+
+        // if (sorter && sorter.field) {
+        //     if (sorter.order == 'ascend') {
+        //         setSortQuery(`&sort=${sorter.field}`)
+        //     }
+
+        //     if (sorter.order == 'descend') {
+        //         setSortQuery(`&sort=-${sorter.field}`)
+        //     }
+        // }
+    };
+
+    const onChangePagination = (page, pageSize) => {
+        if (current !== page) setCurrent(page);
+
+
+    }
     const onFinish = () => {
 
     }
@@ -16,6 +101,10 @@ const Home = () => {
     const onChange = (checkedValues) => {
         console.log('checked = ', checkedValues);
     };
+
+    const handleChangeFilter = (changedValues, values) => {
+        console.log(">>> check changed: ", changedValues, values)
+    }
 
     const items = [
         {
@@ -48,7 +137,7 @@ const Home = () => {
                             <div className='filter__title'>
                                 <span className='filter__title--icon'><IoFilter /></span>
                                 <span className='filter__title--name'>Bộ lọc sản phẩm</span>
-                                <Button className='filter__title--btn'><GrPowerReset /></Button>
+                                <Button className='filter__title--btn'><GrPowerReset onClick={() => form.resetFields()} /></Button>
                             </div>
                             <div className='filter__body'>
                                 <Form
@@ -60,6 +149,8 @@ const Home = () => {
                                     onFinish={onFinish}
                                     onFinishFailed={onFinishFailed}
                                     autoComplete="off"
+                                    onValuesChange={(changedValues, values) => handleChangeFilter(changedValues, values)}
+                                    form={form}
                                 >
                                     <Form.Item
                                         labelCol={{ span: 24 }}
@@ -71,21 +162,19 @@ const Home = () => {
                                             onChange={onChange}
                                         >
                                             <Row gutter={3}>
-                                                <Col span={24}>
-                                                    <Checkbox value="A">A</Checkbox>
-                                                </Col>
-                                                <Col span={24}>
-                                                    <Checkbox value="B">B</Checkbox>
-                                                </Col>
-                                                <Col span={24}>
-                                                    <Checkbox value="C">C</Checkbox>
-                                                </Col>
-                                                <Col span={24}>
-                                                    <Checkbox value="D">D</Checkbox>
-                                                </Col>
-                                                <Col span={24}>
-                                                    <Checkbox value="E">E</Checkbox>
-                                                </Col>
+                                                {listCategory?.map((item, index) => {
+                                                    return (
+                                                        <Col span={24}>
+                                                            <Checkbox
+                                                                key={index}
+                                                                value={item.value}
+                                                                style={{ margin: "5px 0", fontSize: "15px" }}
+                                                            >
+                                                                {item.value}
+                                                            </Checkbox>
+                                                        </Col>
+                                                    )
+                                                })}
                                             </Row>
                                         </Checkbox.Group>
 
@@ -156,168 +245,53 @@ const Home = () => {
                             </Col>
                         </Row>
                         <Row gutter={[16, 16]}>
-                            <Col xxl={4} xl={4} lg={6} md={8} sm={8} xs={12}>
-                                <div className='book'>
-                                    <div
-                                        className='book__img'
-                                    >
-                                        <img
-                                            src='http://localhost:8080/images/book/3-0ac3265a7e0b685ccdf624724721fd6d.jpg'
-                                        />
-                                    </div>
-                                    <div className='book__title'>
-                                        Tiền Đẻ Ra Tiền: Đầu Tư Tài Chính Thông Minh
-                                    </div>
-                                    <div className='book__price'>
-                                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(1000)}
-                                    </div>
-                                    <div
-                                        className='book__rate'
-                                    >
-                                        <Rate disabled defaultValue={5} style={{ fontSize: '10px' }} />
-                                        <span>Đã bán 1K</span>
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col xxl={4} xl={4} lg={6} md={8} sm={8} xs={12}>
-                                <div className='book'>
-                                    <div
-                                        className='book__img'
-                                    >
-                                        <img
-                                            src='http://localhost:8080/images/book/2-579456815ebd4eb1376341dcd00c4708.jpg'
-                                        />
-                                    </div>
-                                    <div className='book__title'>
-                                        Tiền Đẻ Ra Tiền: Đầu Tư Tài Chính Thông Minh
-                                    </div>
-                                    <div className='book__price'>
-                                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(1000)}
-                                    </div>
-                                    <div
-                                        className='book__rate'
-                                    >
-                                        <Rate disabled defaultValue={5} style={{ fontSize: '10px' }} />
-                                        <span>Đã bán 1K</span>
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col xxl={4} xl={4} lg={6} md={8} sm={8} xs={12}>
-                                <div className='book'>
-                                    <div
-                                        className='book__img'
-                                    >
-                                        <img
-                                            src='http://localhost:8080/images/book/2-579456815ebd4eb1376341dcd00c4708.jpg'
-                                        />
-                                    </div>
-                                    <div className='book__title'>
-                                        Tiền Đẻ Ra Tiền: Đầu Tư Tài Chính Thông Minh
-                                    </div>
-                                    <div className='book__price'>
-                                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(1000)}
-                                    </div>
-                                    <div
-                                        className='book__rate'
-                                    >
-                                        <Rate disabled defaultValue={5} style={{ fontSize: '10px' }} />
-                                        <span>Đã bán 1K</span>
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col xxl={4} xl={4} lg={6} md={8} sm={8} xs={12}>
-                                <div className='book'>
-                                    <div
-                                        className='book__img'
-                                    >
-                                        <img
-                                            src='http://localhost:8080/images/book/2-579456815ebd4eb1376341dcd00c4708.jpg'
-                                        />
-                                    </div>
-                                    <div className='book__title'>
-                                        Tiền Đẻ Ra Tiền: Đầu Tư Tài Chính Thông Minh
-                                    </div>
-                                    <div className='book__price'>
-                                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(1000)}
-                                    </div>
-                                    <div
-                                        className='book__rate'
-                                    >
-                                        <Rate disabled defaultValue={5} style={{ fontSize: '10px' }} />
-                                        <span>Đã bán 1K</span>
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col xxl={4} xl={4} lg={6} md={8} sm={8} xs={12}>
-                                <div className='book'>
-                                    <div
-                                        className='book__img'
-                                    >
-                                        <img
-                                            src='http://localhost:8080/images/book/2-579456815ebd4eb1376341dcd00c4708.jpg'
-                                        />
-                                    </div>
-                                    <div className='book__title'>
-                                        Tiền Đẻ Ra Tiền: Đầu Tư Tài Chính Thông Minh
-                                    </div>
-                                    <div className='book__price'>
-                                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(1000)}
-                                    </div>
-                                    <div
-                                        className='book__rate'
-                                    >
-                                        <Rate disabled defaultValue={5} style={{ fontSize: '10px' }} />
-                                        <span>Đã bán 1K</span>
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col xxl={4} xl={4} lg={6} md={8} sm={8} xs={12}>
-                                <div className='book'>
-                                    <div
-                                        className='book__img'
-                                    >
-                                        <img
-                                            src='http://localhost:8080/images/book/2-579456815ebd4eb1376341dcd00c4708.jpg'
-                                        />
-                                    </div>
-                                    <div className='book__title'>
-                                        Tiền Đẻ Ra Tiền: Đầu Tư Tài Chính Thông Minh
-                                    </div>
-                                    <div className='book__price'>
-                                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(1000)}
-                                    </div>
-                                    <div
-                                        className='book__rate'
-                                    >
-                                        <Rate disabled defaultValue={5} style={{ fontSize: '10px' }} />
-                                        <span>Đã bán 1K</span>
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col xxl={4} xl={4} lg={6} md={8} sm={8} xs={12}>
-                                <div className='book'>
-                                    <div
-                                        className='book__img'
-                                    >
-                                        <img
-                                            src='http://localhost:8080/images/book/2-579456815ebd4eb1376341dcd00c4708.jpg'
-                                        />
-                                    </div>
-                                    <div className='book__title'>
-                                        Tiền Đẻ Ra Tiền: Đầu Tư Tài Chính Thông Minh
-                                    </div>
-                                    <div className='book__price'>
-                                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(1000)}
-                                    </div>
-                                    <div
-                                        className='book__rate'
-                                    >
-                                        <Rate disabled defaultValue={5} style={{ fontSize: '10px' }} />
-                                        <span>Đã bán 1K</span>
-                                    </div>
-                                </div>
-                            </Col>
+                            {listBook && listBook.length > 0 &&
+                                listBook.map((item, index) => {
+                                    return (
+                                        <Col xxl={4} xl={6} lg={8} md={8} sm={12} xs={24}
+                                            key={index}
+                                        >
+                                            <div className='book'>
+                                                <div
+                                                    className='book__img'
+                                                >
+                                                    <img
+                                                        src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item.thumbnail}`}
+                                                    />
+                                                </div>
+                                                <div
+                                                    className='book__title'
+                                                    style={{ height: "60px" }}
+                                                >
+                                                    {item.mainText}
+                                                </div>
+                                                <div className='book__price'>
+                                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}
+                                                </div>
+                                                <div
+                                                    className='book__rate'
+                                                >
+                                                    <Rate disabled defaultValue={5} style={{ fontSize: '10px' }} />
+                                                    <span>Đã bán {item.sold}</span>
+                                                </div>
+                                            </div>
+                                        </Col>
+
+                                    )
+                                })
+                            }
                         </Row>
+                        <Divider />
+                        <Pagination
+                            current={current}
+                            total={total}
+                            pageSize={8}
+                            onChange={(p, s) => handleOnChangePage({ current: p, pageSize: s })}
+                            responsive
+                            style={{
+                                display: "flex", justifyContent: "center", alignItems: "center"
+                            }}
+                        />
                     </Col>
                 </Row >
             </div>
