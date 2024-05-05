@@ -1,7 +1,7 @@
 import './Home.scss'
 import { IoFilter } from "react-icons/io5";
 import { GrPowerReset } from "react-icons/gr";
-import { Button, Col, Form, Row, Checkbox, Divider, InputNumber, Rate, Card, Tabs, Pagination } from 'antd';
+import { Button, Col, Form, Row, Checkbox, Divider, InputNumber, Rate, Card, Tabs, Pagination, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 import { callFetchCategory, callGetBookWithPaginate } from '../../services/api';
 
@@ -16,8 +16,9 @@ const Home = () => {
     const [total, setTotal] = useState(0);
 
     const [querySearch, setQuerySearch] = useState("");
-    const [sortQuery, setSortQuery] = useState("");
+    const [sortQuery, setSortQuery] = useState(`&sort=-sold`);
     const [loading, setLoading] = useState(false);
+    const [filter, setFilter] = useState("");
 
     const [form] = Form.useForm();
     useEffect(() => {
@@ -40,7 +41,7 @@ const Home = () => {
 
     useEffect(() => {
         fetchBook();
-    }, [current, pageSize, querySearch, sortQuery]);
+    }, [current, pageSize, querySearch, sortQuery, filter]);
 
     const fetchBook = async () => {
         setLoading(true);
@@ -52,6 +53,10 @@ const Home = () => {
 
         if (sortQuery) {
             query += sortQuery;
+        }
+
+        if (filter) {
+            query += filter
         }
         const res = await callGetBookWithPaginate(query);
         console.log(">>> check res: ", res);
@@ -88,42 +93,65 @@ const Home = () => {
 
     const onChangePagination = (page, pageSize) => {
         if (current !== page) setCurrent(page);
-
-
     }
-    const onFinish = () => {
-
+    const onFinish = (values) => {
+        let query = "";
+        if (values?.range?.from > 0 && values?.range?.to > 0) {
+            const l = values?.range?.from;
+            const r = values?.range?.to;
+            query += `&price>=${l}&&price<=${r}`;
+        }
+        if (values?.category) {
+            if (values.category) {
+                const cate = values.category;
+                if (cate && cate.length > 0) {
+                    const f = cate.join(",");
+                    query += `&category=${f}`
+                }
+            }
+        }
+        setFilter(query);
     }
     const onFinishFailed = () => {
 
     }
 
     const onChange = (checkedValues) => {
-        console.log('checked = ', checkedValues);
+        if (checkedValues) setSortQuery(`${checkedValues}`)
     };
 
     const handleChangeFilter = (changedValues, values) => {
         console.log(">>> check changed: ", changedValues, values)
+        if (changedValues.category) {
+            const cate = values.category;
+            if (cate && cate.length > 0) {
+                const f = cate.join(",");
+                setFilter(`&category=${f}`)
+            }
+            else {
+                setFilter("");
+            }
+        }
     }
 
     const items = [
         {
-            key: '1',
+            key: '&sort=-sold',
             label: 'Phổ biến',
             children: <></>,
         },
         {
-            key: '2',
+            key: '&sort=-updatedAt',
             label: 'Hàng mới',
             children: <></>,
         },
         {
-            key: '3',
+            key: '&sort=price',
             label: 'Giá thấp đến cao',
             children: <></>,
         },
         {
-            key: '4',
+            key: '&sort=-price',
             label: 'Giá cao đến thấp',
             children: <></>,
         },
@@ -211,7 +239,7 @@ const Home = () => {
                                     <Button
                                         type='primary'
                                         style={{ width: "100%" }}
-                                        htmlType='submit'
+                                        onClick={() => form.submit()}
                                     >Áp dụng</Button>
                                     <Form.Item>
                                         <div>
@@ -241,7 +269,7 @@ const Home = () => {
                     <Col lg={18} md={24} sm={24} xs={24}>
                         <Row>
                             <Col md={24}>
-                                <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+                                <Tabs defaultActiveKey="1" items={items} onChange={(value) => setSortQuery(value)} />
                             </Col>
                         </Row>
                         <Row gutter={[16, 16]}>
@@ -251,30 +279,32 @@ const Home = () => {
                                         <Col xxl={4} xl={6} lg={8} md={8} sm={12} xs={24}
                                             key={index}
                                         >
-                                            <div className='book'>
-                                                <div
-                                                    className='book__img'
-                                                >
-                                                    <img
-                                                        src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item.thumbnail}`}
-                                                    />
+                                            <Spin tip="Loading..." size="large" spinning={loading}>
+                                                <div className='book'>
+                                                    <div
+                                                        className='book__img'
+                                                    >
+                                                        <img
+                                                            src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item.thumbnail}`}
+                                                        />
+                                                    </div>
+                                                    <div
+                                                        className='book__title'
+                                                        style={{ height: "60px" }}
+                                                    >
+                                                        {item.mainText}
+                                                    </div>
+                                                    <div className='book__price'>
+                                                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}
+                                                    </div>
+                                                    <div
+                                                        className='book__rate'
+                                                    >
+                                                        <Rate disabled defaultValue={5} style={{ fontSize: '10px' }} />
+                                                        <span>Đã bán {item.sold}</span>
+                                                    </div>
                                                 </div>
-                                                <div
-                                                    className='book__title'
-                                                    style={{ height: "60px" }}
-                                                >
-                                                    {item.mainText}
-                                                </div>
-                                                <div className='book__price'>
-                                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}
-                                                </div>
-                                                <div
-                                                    className='book__rate'
-                                                >
-                                                    <Rate disabled defaultValue={5} style={{ fontSize: '10px' }} />
-                                                    <span>Đã bán {item.sold}</span>
-                                                </div>
-                                            </div>
+                                            </Spin>
                                         </Col>
 
                                     )
