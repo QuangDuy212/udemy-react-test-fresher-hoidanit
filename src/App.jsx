@@ -62,11 +62,11 @@ export default function App() {
       children: [
         { index: true, element: <Home /> },
         {
-          path: "user",
+          path: "contact",
           element: <ContactPage />,
         },
         {
-          path: "book",
+          path: "book/:slug",
           element: <BookPage />,
         },
       ],

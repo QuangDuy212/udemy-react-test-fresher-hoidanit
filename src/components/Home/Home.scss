@@ -1,5 +1,4 @@
 .home {
-    position        : relative;
     max-width       : 1500px;
     margin          : 0 auto;
     background-color: #f5f5fa;
@@ -63,6 +62,6 @@
 }
 
 .container {
-    width : calc(100vw - 100px);
-    margin: 0 auto;
+    margin          : 0 auto;
+    background-color: #f5f5fa;
 }

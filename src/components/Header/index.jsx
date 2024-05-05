@@ -6,7 +6,7 @@ import { Avatar, Badge, Space, Dropdown, Row, Col, Button, Layout, Menu, theme, 
 import { DownOutlined } from '@ant-design/icons';
 import './Header.scss'
 import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { FaBars } from "react-icons/fa6";
 import {
     MenuFoldOutlined,
@@ -24,6 +24,7 @@ import logo from '../../../public/logo/logo.jpg'
 const Header = () => {
 
     const [collapsed, setCollapsed] = useState(false);
+    const navigate = useNavigate();
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -45,7 +46,8 @@ const Header = () => {
             <Row className="header" gutter={[0, 5]} >
                 <Col className="header__title" xs={4}>
                     <Row gutter={[0, 5]}>
-                        <Col className="header__title--logo" lg={24} md={0} sm={0} xs={0}>Book shop</Col>
+                        <Col className="header__title--logo" lg={24} md={0} sm={0} xs={0}
+                            onClick={() => navigate('/')}>Book shop</Col>
                         <Col className="header__title--bar" lg={0} md={24} sm={24} xs={24}>
                             <span onClick={showDrawer} className="icon">
                                 <FaBars />
