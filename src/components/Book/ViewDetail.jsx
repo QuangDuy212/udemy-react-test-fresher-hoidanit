@@ -6,6 +6,7 @@ import { FaPlus, FaMinus } from "react-icons/fa6";
 import ModalGallery from './ModalGallery';
 import logoShip from '../../../public/logo/logoShip.png';
 import { FaCartPlus } from "react-icons/fa";
+import BookLoader from './BookLoader';
 
 const images = [
     {
@@ -125,6 +126,7 @@ const ViewDetail = (props) => {
                             </div>
                         </Col>
                     </Row>
+                    {/* <BookLoader /> */}
                 </div>
             </div>
             <ModalGallery
