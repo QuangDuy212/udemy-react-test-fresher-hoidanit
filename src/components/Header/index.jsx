@@ -81,8 +81,10 @@ const Header = () => {
                                 </Badge>
                             </Space>
                         </Col>
-                        <Col className="header__feature--account" lg={14} md={0} sm={0} xs={0}>
-                            <Account />
+                        <Col lg={14} md={0} sm={0} xs={0}>
+                            <div className="header__feature--account" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                <Account />
+                            </div>
                         </Col>
                     </Row>
                 </Col>
