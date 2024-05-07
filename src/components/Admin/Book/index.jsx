@@ -126,7 +126,7 @@ const Book = () => {
                             <ConfigProvider>
                                 <Popover
                                     placement="rightTop"
-                                    title={"titleDelete"}
+                                    title={<div style={{ textAlign: "center" }}>Xác nhận xóa</div>}
                                     trigger={"click"}
                                     content={
                                         <div className='del-content'>

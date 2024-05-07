@@ -23,7 +23,7 @@ const BookPage = () => {
             raw.items = getImages(raw);
             setTimeout(() => {
                 setDataBook(raw);
-            }, 3000)
+            }, 0)
         }
     }
 
