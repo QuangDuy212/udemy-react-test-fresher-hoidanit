@@ -118,3 +118,16 @@
         }
     }
 }
+
+.origintal-image {
+    width     : 100%;
+    height    : 500px;
+    object-fit: contain;
+    cursor    : pointer;
+}
+
+
+
+.thumbnail-image {
+    cursor: pointer;
+}

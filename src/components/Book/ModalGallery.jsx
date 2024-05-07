@@ -1,14 +1,20 @@
 
 import { Button, Col, Modal, Row, Image } from 'antd';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ImageGallery from "react-image-gallery";
 import './ModalGallery.scss';
 
 
 const ModalGallery = (props) => {
     const { isOpenModalGallery, setIsOpenModalGallery, images, currentIndex } = props;
-    const [dataPreview, setDataPreview] = useState(images[0].original);
+    const [activeIndex, setActiveIndex] = useState(0);
     const refGallery = useRef();
+
+    useEffect(() => {
+        if (isOpenModalGallery) {
+            setActiveIndex(currentIndex);
+        }
+    }, [isOpenModalGallery, currentIndex])
 
     const handleCancel = () => {
         setIsOpenModalGallery(false);
@@ -39,6 +45,7 @@ const ModalGallery = (props) => {
                                 showThumbnails={false}
                                 startIndex={currentIndex}
                                 width={100}
+                                onSlide={(i) => setActiveIndex(i)}
                             />
                         </div>
                     </Col>
@@ -47,14 +54,14 @@ const ModalGallery = (props) => {
                             {images?.map((item, index) => {
                                 return (
                                     <Col xl={8} md={24} key={`image-${index}`}>
-                                        <div className='thumbnail'
+                                        <div className={`thumbnail ${index === activeIndex ? "active" : ""} `}
                                         >
                                             <Image
                                                 src={item.thumbnail}
                                                 width={100}
                                                 height={100}
                                                 preview={false}
-                                                onClick={() => { handleOnClickThumnail(index) }}
+                                                onClick={() => { handleOnClickThumnail(index); setActiveIndex(index) }}
                                             />
                                         </div>
                                     </Col>
