@@ -7,6 +7,8 @@ import ModalGallery from './ModalGallery';
 import logoShip from '../../../public/logo/logoShip.png';
 import { FaCartPlus } from "react-icons/fa";
 import BookLoader from './BookLoader';
+import { useDispatch } from 'react-redux';
+import { doAddBookAction } from '../../redux/order/orderSlice';
 
 const images = [
     {
@@ -63,20 +65,34 @@ const images = [
     },
 ];
 
-const onChange = (value) => {
-    console.log('changed', value);
-};
+
 
 const ViewDetail = (props) => {
+    // LIBRARY:
+    const dispatch = useDispatch();
+
+    //PROPS:
     const { dataBook } = props;
+    //STATE: 
     const [isOpenModalGallery, setIsOpenModalGallery] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [currentQuantity, setCurrentQuantity] = useState(1);
+
     const refGallery = useRef(null);
 
     const image = dataBook?.items ?? [];
+
+    // METHODS:
     const handleOnClickImage = () => {
         setIsOpenModalGallery(true);
         setCurrentIndex(refGallery?.current?.getCurrentIndex() ?? 0);
+    }
+    const onChange = (value) => {
+        setCurrentQuantity(value);
+    };
+
+    const handleAddToCart = (quantity, book) => {
+        dispatch(doAddBookAction({ quantity, detail: book, _id: book._id }))
     }
 
     return (
@@ -115,11 +131,18 @@ const ViewDetail = (props) => {
                                     <div className='viewdetail__info--quantity'>
                                         <span className='text1'>Số lượng</span>
 
-                                        <InputNumber min={1} max={10} defaultValue={3} onChange={onChange}
+                                        <InputNumber
+                                            min={1} max={dataBook.quantity}
+                                            defaultValue={1}
+                                            onChange={onChange}
                                         />
                                     </div>
                                     <div className='viewdetail__info--btn'>
-                                        <Button type='button' className='add'>
+                                        <Button
+                                            type='button'
+                                            className='add'
+                                            onClick={() => handleAddToCart(currentQuantity, dataBook)}
+                                        >
                                             <FaCartPlus style={{ margin: "0 5px 0 0", fontSize: "20px" }} />
                                             Thêm vào giỏ hàng
                                         </Button>
