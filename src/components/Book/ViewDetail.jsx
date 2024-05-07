@@ -1,4 +1,4 @@
-import { Button, Col, Row, Rate, InputNumber } from 'antd';
+import { Button, Col, Row, Rate, InputNumber, message } from 'antd';
 import './book.scss';
 import ImageGallery from "react-image-gallery";
 import { useRef, useState } from 'react';
@@ -92,7 +92,7 @@ const ViewDetail = (props) => {
     };
 
     const handleAddToCart = (quantity, book) => {
-        dispatch(doAddBookAction({ quantity, detail: book, _id: book._id }))
+        dispatch(doAddBookAction({ quantity, detail: book, _id: book._id }));
     }
 
     return (

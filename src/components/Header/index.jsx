@@ -23,13 +23,16 @@ import logo from '../../../public/logo/logo.jpg'
 
 const Header = () => {
 
-    const [collapsed, setCollapsed] = useState(false);
+    // LIBRARY:
     const navigate = useNavigate();
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
 
-
+    //REDUX: 
+    const carts = useSelector(state => state.order.carts);
+    // STATE: 
+    const [collapsed, setCollapsed] = useState(false);
     const [open, setOpen] = useState(false);
     const [placement, setPlacement] = useState('left');
 
@@ -40,6 +43,7 @@ const Header = () => {
     const onClose = () => {
         setOpen(false);
     };
+
 
     return (
         <>
@@ -76,8 +80,10 @@ const Header = () => {
                     <Row className="header__feature">
                         <Col className="header__feature--cart" lg={5}  >
                             <Space size="middle">
-                                <Badge count={10} overflowCount={9}>
-                                    <FaCartShopping />
+                                <Badge count={carts?.length ?? 0} overflowCount={9} showZero>
+                                    <span className="icon-cart1">
+                                        <FaCartShopping />
+                                    </span>
                                 </Badge>
                             </Space>
                         </Col>
