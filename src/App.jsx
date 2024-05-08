@@ -21,6 +21,7 @@ import DashboardAdmin from './pages/admin';
 import BookPage from './pages/book';
 import User from './components/Admin/User';
 import Book from './components/Admin/Book';
+import './styles/global.scss';
 
 const Layout = () => {
   return (

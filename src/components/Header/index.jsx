@@ -2,7 +2,11 @@ import { GiBlackBook } from "react-icons/gi";
 import { CgSearch } from "react-icons/cg";
 import { FaCartShopping } from "react-icons/fa6";
 import { ClockCircleOutlined } from '@ant-design/icons';
-import { Avatar, Badge, Space, Dropdown, Row, Col, Button, Layout, Menu, theme, Drawer, Radio, Divider, Input } from 'antd';
+import {
+    Avatar, Badge, Space, Dropdown, Row, Col,
+    Button, Layout, Menu, theme, Drawer,
+    Radio, Divider, Input, ConfigProvider, Popover
+} from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import './Header.scss'
 import { useSelector } from "react-redux";
@@ -17,7 +21,6 @@ import {
 } from '@ant-design/icons';
 import { useState } from "react";
 import Account from "../Account/Account";
-import logo from '../../../public/logo/logo.jpg'
 
 
 
@@ -35,6 +38,7 @@ const Header = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [open, setOpen] = useState(false);
     const [placement, setPlacement] = useState('left');
+    const [isOpenCart, setIsOpenCart] = useState(true);
 
     const showDrawer = () => {
         setOpen(true);
@@ -44,6 +48,38 @@ const Header = () => {
         setOpen(false);
     };
 
+    const truncate = (str, n) => {
+        return (str.length > n) ? str.slice(0, n - 1) + '...' : str;
+    };
+
+    const contentPopover = () => {
+        return (
+            <div className="pop-cart-body">
+                <div className="pop-cart-content">
+                    {carts?.map((item, index) => {
+                        return (
+                            <div className="book">
+                                <img
+                                    src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item.detail.thumbnail}`}
+
+                                    className="book__img"
+                                />
+                                <div className="book__name">
+                                    {truncate(item.detail.mainText, 100)}
+                                </div>
+                                <div className="book__price">
+                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.detail.price)}
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
+                <div className="pop-cart-footer">
+                    <button> Xem Giỏ Hàng</button>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <>
@@ -78,15 +114,25 @@ const Header = () => {
                 </Col>
                 <Col xs={4} >
                     <Row className="header__feature">
-                        <Col className="header__feature--cart" lg={5}  >
-                            <Space size="middle">
-                                <Badge count={carts?.length ?? 0} overflowCount={9} showZero>
-                                    <span className="icon-cart1">
-                                        <FaCartShopping />
-                                    </span>
-                                </Badge>
-                            </Space>
-                        </Col>
+                        <Popover
+                            placement="bottomRight"
+                            title={"Sản phẩm mới thêm"}
+                            content={contentPopover}
+                            className="pop-cart"
+                            rootClassName="pop-cart"
+                            width={"400px"}
+                        >
+                            <Col className="header__feature--cart" lg={5}  >
+                                <Space size="middle">
+                                    <Badge count={carts?.length ?? 0} overflowCount={9} showZero>
+                                        <span className="icon-cart1">
+                                            <FaCartShopping />
+                                        </span>
+                                    </Badge>
+                                </Space>
+
+                            </Col>
+                        </Popover>
                         <Col lg={14} md={0} sm={0} xs={0}>
                             <div className="header__feature--account" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                                 <Account />
@@ -95,6 +141,7 @@ const Header = () => {
                     </Row>
                 </Col>
             </Row>
+
         </>
     )
 }

@@ -1,0 +1,59 @@
+.pop-cart {
+    .pop-cart-body {
+        .pop-cart-content {
+            width: 400px;
+
+            .book {
+                display        : flex;
+                justify-content: space-between;
+                margin-bottom  : 5px;
+                height         : 70px;
+                align-items    : center;
+
+                &__img {
+                    width     : 60px;
+                    height    : 60px;
+                    object-fit: contain;
+
+                }
+
+                &__name {
+                    width : 240px;
+                    height: 60px;
+                }
+
+                &__price {
+                    width     : 100px;
+                    color     : #ee4d2d;
+                    text-align: right;
+                    height    : 60px;
+                }
+
+                &:hover {
+                    background-color: rgba(0, 0, 0, 0.05);
+                }
+
+            }
+        }
+
+        .pop-cart-footer {
+            text-align: right;
+            margin-top: 20px;
+
+            button {
+                border          : none;
+                padding         : 10px;
+                background-color: rgb(238, 77, 45);
+                color           : #fff;
+                outline         : 0;
+                overflow        : visible;
+                position        : relative;
+                cursor          : pointer;
+
+                &:hover {
+                    background-color: rgba(238, 77, 45, 0.5);
+                }
+            }
+        }
+    }
+}
