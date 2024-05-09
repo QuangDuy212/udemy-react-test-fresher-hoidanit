@@ -5,7 +5,7 @@ import { ClockCircleOutlined } from '@ant-design/icons';
 import {
     Avatar, Badge, Space, Dropdown, Row, Col,
     Button, Layout, Menu, theme, Drawer,
-    Radio, Divider, Input, ConfigProvider, Popover
+    Radio, Divider, Input, ConfigProvider, Popover, Empty
 } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import './Header.scss'
@@ -56,7 +56,7 @@ const Header = () => {
         return (
             <div className="pop-cart-body">
                 <div className="pop-cart-content">
-                    {carts?.map((item, index) => {
+                    {carts && carts.length > 0 && carts?.map((item, index) => {
                         return (
                             <div className="book" key={`book${index}`}>
                                 <img
@@ -73,6 +73,9 @@ const Header = () => {
                             </div>
                         )
                     })}
+                    {carts.length === 0 &&
+                        <Empty description="Không có sản phẩm nào" />
+                    }
                 </div>
                 <div className="pop-cart-footer">
                     <button onClick={() => navigate("/order")}> Xem Giỏ Hàng</button>

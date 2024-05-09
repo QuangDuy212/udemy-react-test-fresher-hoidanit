@@ -1,0 +1,18 @@
+.confirm {
+    &__btn {
+        button {
+            border          : none;
+            padding         : 10px;
+            background-color: rgb(238, 77, 45);
+            color           : #fff;
+            outline         : 0;
+            overflow        : visible;
+            position        : relative;
+            cursor          : pointer;
+
+            &:hover {
+                background-color: rgba(238, 77, 45, 0.5);
+            }
+        }
+    }
+}
