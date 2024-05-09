@@ -1,7 +1,13 @@
 .header {
-    display  : flex;
-    max-width: 1500px;
-    margin   : 0 auto;
+    display         : flex;
+    margin          : 0 auto;
+    position        : fixed;
+    z-index         : 1000;
+    width           : 100vw;
+    background-color: #ccc;
+    padding         : 0 40px;
+
+
 
 
     &__title {

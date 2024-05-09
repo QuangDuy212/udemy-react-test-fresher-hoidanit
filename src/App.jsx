@@ -22,6 +22,7 @@ import BookPage from './pages/book';
 import User from './components/Admin/User';
 import Book from './components/Admin/Book';
 import './styles/global.scss';
+import OrderPage from './pages/order/OrderPage';
 
 const Layout = () => {
   return (
@@ -70,6 +71,10 @@ export default function App() {
           path: "book/:slug",
           element: <BookPage />,
         },
+        {
+          path: "/order",
+          element: <OrderPage />,
+        },
       ],
     },
     {
@@ -111,6 +116,7 @@ export default function App() {
       path: "/register",
       element: <RegisterPage />,
     },
+
   ]);
   return (
     <>

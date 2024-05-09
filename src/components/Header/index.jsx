@@ -58,7 +58,7 @@ const Header = () => {
                 <div className="pop-cart-content">
                     {carts?.map((item, index) => {
                         return (
-                            <div className="book">
+                            <div className="book" key={`book${index}`}>
                                 <img
                                     src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item.detail.thumbnail}`}
 
@@ -75,7 +75,7 @@ const Header = () => {
                     })}
                 </div>
                 <div className="pop-cart-footer">
-                    <button> Xem Giỏ Hàng</button>
+                    <button onClick={() => navigate("/order")}> Xem Giỏ Hàng</button>
                 </div>
             </div>
         )
