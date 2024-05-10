@@ -75,3 +75,7 @@ export const callCreateAnOrder = (data) => {
         ...data
     })
 }
+
+export const callGetListOrderWithPaginate = (current, pageSize) => {
+    return axios.get(`/api/v1/order?current=${current}&pageSize=${pageSize}`)
+}

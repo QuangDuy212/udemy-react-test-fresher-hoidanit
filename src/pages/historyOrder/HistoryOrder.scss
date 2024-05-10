@@ -1,0 +1,29 @@
+.history {
+    max-width       : 1500px;
+    margin          : 0 auto;
+    background-color: #f5f5fa;
+    padding         : 10px 40px;
+    min-height      : 100vh;
+
+
+    &__title {
+        display         : flex;
+        justify-content : center;
+        align-items     : center;
+        font-size       : 50px;
+        color           : #6da4e8;
+        padding         : 10px;
+        background-color: #e7e7e9;
+        border-radius   : 10px;
+    }
+
+    &__table {
+        margin-top: 60px;
+
+    }
+}
+
+.detail-btn {
+    color : #6da4e8;
+    cursor: pointer;
+}

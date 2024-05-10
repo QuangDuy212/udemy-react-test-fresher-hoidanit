@@ -23,6 +23,7 @@ import User from './components/Admin/User';
 import Book from './components/Admin/Book';
 import './styles/global.scss';
 import OrderPage from './pages/order/OrderPage';
+import HistoryOrder from './pages/historyOrder/HistoryOrder';
 
 const Layout = () => {
   return (
@@ -72,9 +73,13 @@ export default function App() {
           element: <BookPage />,
         },
         {
-          path: "/order",
+          path: "order",
           element: <OrderPage />,
         },
+        {
+          path: "history",
+          element: <HistoryOrder />
+        }
       ],
     },
     {

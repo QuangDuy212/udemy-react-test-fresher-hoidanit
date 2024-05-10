@@ -28,11 +28,16 @@ const Account = () => {
     const itemsAuth = [
         {
             label: "Quản lý tài khoản",
-            key: '0',
+            key: 'manage',
+        },
+        {
+            label: "Lịch sử mua hàng",
+            key: 'history',
+            onClick: () => { navigate("/history") }
         },
         {
             label: "Đăng xuất",
-            key: '1',
+            key: 'logout',
             onClick: () => hanldeLogout()
         }
     ];

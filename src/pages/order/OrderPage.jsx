@@ -160,7 +160,7 @@ const OrderPage = () => {
                             <Result
                                 icon={<SmileOutlined />}
                                 title="Tuyệt, cảm ơn đã tin tưởng!"
-                                extra={<Button type="primary" onClick={() => navigate("/")}>Quay lại trang chủ</Button>}
+                                extra={<Button type="primary" onClick={() => navigate("/history")}>Lịch sử</Button>}
                             />
                         </Col>
                     }
