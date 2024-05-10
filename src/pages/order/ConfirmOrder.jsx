@@ -1,19 +1,60 @@
 
-import { Button, Checkbox, Form, Input, Radio } from 'antd';
+import { Button, Checkbox, Divider, Form, Input, Radio, message } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { useSelector } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { ImSpinner8 } from "react-icons/im";
+import { callCreateAnOrder } from '../../services/api';
+import { doResetBookCart } from '../../redux/order/orderSlice';
 
 const ConfirmOrder = (props) => {
 
     // REDUX: 
-    const user = useSelector(state => state.account.user)
+    const user = useSelector(state => state.account.user);
+    const carts = useSelector(state => state.order.carts);
 
     //PROPS:
-    const { setCurrentStep } = props;
+    const { setCurrentStep, totalPrice } = props;
 
-    const onFinish = (values) => {
-        console.log('Success:', values);
-        setCurrentStep(3);
+    //LIBRARY:
+    const [form] = Form.useForm();
+    const dispatch = useDispatch();
+
+
+    //STATE: 
+    const [isSubmit, setIsSubmit] = useState(false);
+
+    const onFinish = async (values) => {
+        setIsSubmit(true);
+        const detailOrder = carts.map((item, index) => {
+            return {
+                bookName: item?.detail?.mainText,
+                quantity: item?.quantity,
+                _id: item?._id
+            }
+        });
+        const name = values?.name;
+        const address = values?.address;
+        const phone = values?.phone;
+        const total = totalPrice;
+        const data = {
+            name: name,
+            address: address,
+            phone: phone,
+            totalPrice: total,
+            detail: detailOrder
+        }
+
+
+        const res = await callCreateAnOrder(data);
+        if (res.statusCode == 201) {
+            message.success("Thanh toán thành công!");
+            setCurrentStep(3);
+            dispatch(doResetBookCart());
+        } else {
+            message.error(res.message);
+        }
+        setIsSubmit(false);
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -32,12 +73,14 @@ const ConfirmOrder = (props) => {
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                     autoComplete="off"
+                    form={form}
                 >
                     <Form.Item
                         label="Tên người nhận"
                         labelCol={{ span: 24 }}
-                        name="fullName"
+                        name="name"
                         rules={[{ required: true, message: 'Không để trống tên!' }]}
+                        initialValue={user?.fullName}
                     >
                         <Input />
                     </Form.Item>
@@ -47,6 +90,7 @@ const ConfirmOrder = (props) => {
                         labelCol={{ span: 24 }}
                         name="phone"
                         rules={[{ required: true, message: 'Không để trống điện thoại!' }]}
+                        initialValue={user?.phone}
                     >
                         <Input />
                     </Form.Item>
@@ -69,15 +113,20 @@ const ConfirmOrder = (props) => {
                     >
                         <Radio >Thanh toán khi nhận hàng</Radio>
                     </Form.Item>
-
-
-
-                    <Form.Item wrapperCol={{ span: 24 }}>
-                        <button type='submit' className='confirm__btn'>
-                            Đặt hàng
-                        </button>
-                    </Form.Item>
                 </Form>
+                <Divider />
+                <div className='confirm__price'>
+                    <span className='text1'>Tổng: </span>
+                    <span className='text2'>{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice)}</span>
+                </div>
+                <Divider />
+                <button
+                    className='confirm__btn'
+                    onClick={() => form.submit()}
+                    disabled={isSubmit}
+                >
+                    {isSubmit && <span className='spin'><ImSpinner8 /></span>}Đặt hàng
+                </button>
             </div>
         </>
     )

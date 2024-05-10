@@ -124,6 +124,22 @@
     padding         : 10px;
     margin-top      : 60px;
 
+    &__price {
+        display        : flex;
+        justify-content: space-between;
+        width          : 100%;
+        margin-bottom  : 20px;
+
+        .text1 {
+            font-size: 20px;
+        }
+
+        .text2 {
+            font-size: 25px;
+            color    : rgb(238, 77, 45);
+        }
+    }
+
     &__btn {
         width           : 100%;
         border          : none;
