@@ -105,3 +105,7 @@ export const callChangePassword = (email, oldpass, newpass) => {
         email, oldpass, newpass
     })
 }
+
+export const callGetDashBoard = () => {
+    return axios.get(`/api/v1/database/dashboard`);
+}
