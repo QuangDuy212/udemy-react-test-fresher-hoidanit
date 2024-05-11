@@ -79,3 +79,29 @@ export const callCreateAnOrder = (data) => {
 export const callGetListOrderWithPaginate = (current, pageSize) => {
     return axios.get(`/api/v1/order?current=${current}&pageSize=${pageSize}`)
 }
+
+export const callUpdateAvatar = (fileImg) => {
+    const bodyFormData = new FormData();
+    bodyFormData.append('fileImg', fileImg);
+    return axios({
+        method: 'post',
+        url: "/api/v1/file/upload",
+        data: bodyFormData,
+        headers: {
+            "Content-Type": "multipart/form-data",
+            "upload-type": "avatar"
+        },
+    });
+}
+
+export const callUpdateInfo = (_id, fullName, phone, avatar) => {
+    return axios.put(`/api/v1/user`, {
+        _id, fullName, phone, avatar
+    })
+}
+
+export const callChangePassword = (email, oldpass, newpass) => {
+    return axios.post(`/api/v1/user/change-password`, {
+        email, oldpass, newpass
+    })
+}

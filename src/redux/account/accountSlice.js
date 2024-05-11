@@ -39,13 +39,22 @@ export const accountSlice = createSlice({
                 avatar: "",
                 id: ""
             }
-
+        },
+        doUpdateAction: (state, action) => {
+            state.isAuthenticated = true;
+            state.user = {
+                ...state.user,
+                id: action.payload._id,
+                email: action.payload.email,
+                fullName: action.payload.fullName,
+                avatar: action.payload.avatar,
+            }
         }
     },
     extraReducers: (builder) => {
     },
 });
 
-export const { doLoginAction, doGetAccountAction, doLogoutAction } = accountSlice.actions;
+export const { doLoginAction, doGetAccountAction, doLogoutAction, doUpdateAction } = accountSlice.actions;
 
 export default accountSlice.reducer;

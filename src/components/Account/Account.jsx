@@ -7,9 +7,14 @@ import { doLogoutAction } from "../../redux/account/accountSlice";
 import { Link, useNavigate } from "react-router-dom";
 
 import { UserOutlined } from '@ant-design/icons';
+import { useState } from "react";
+import ManageUser from "./Modal/ManageUser";
 
 const Account = () => {
+    //STATE:
+    const [isOpenManage, setIsOpenManage] = useState(false);
 
+    //LIBRARY:
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const isAuthenticated = useSelector(state => state.account.isAuthenticated);
@@ -29,6 +34,7 @@ const Account = () => {
         {
             label: "Quản lý tài khoản",
             key: 'manage',
+            onClick: () => setIsOpenManage(true)
         },
         {
             label: "Lịch sử mua hàng",
@@ -104,6 +110,11 @@ const Account = () => {
                     </Space>
                 </a>
             </Dropdown>
+            <ManageUser
+                isOpenManage={isOpenManage}
+                setIsOpenManage={setIsOpenManage}
+                user={user}
+            />
         </div>
     )
 }
