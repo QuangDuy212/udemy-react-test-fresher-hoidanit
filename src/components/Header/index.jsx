@@ -24,7 +24,7 @@ import Account from "../Account/Account";
 
 
 
-const Header = () => {
+const Header = (props) => {
 
     // LIBRARY:
     const navigate = useNavigate();
@@ -32,8 +32,12 @@ const Header = () => {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
 
+    //PROPS:
+    const { searchTerm, setSearchTerm } = props;
+
     //REDUX: 
     const carts = useSelector(state => state.order.carts);
+
     // STATE: 
     const [collapsed, setCollapsed] = useState(false);
     const [open, setOpen] = useState(false);
@@ -51,6 +55,10 @@ const Header = () => {
     const truncate = (str, n) => {
         return (str.length > n) ? str.slice(0, n - 1) + '...' : str;
     };
+
+    const handleOnChange = (value) => {
+        setSearchTerm(`&mainText=/${value}/i`)
+    }
 
     const contentPopover = () => {
         return (
@@ -113,7 +121,13 @@ const Header = () => {
                     </Row>
                 </Col>
                 <Col className="header__search" xs={16}>
-                    <Input type="text" placeholder="Tìm kiếm" style={{ width: "100%" }} />
+                    <Input
+                        type="text"
+                        placeholder="Tìm kiếm"
+                        style={{ width: "100%" }}
+                        value={searchTerm}
+                        onChange={(value) => setSearchTerm(value?.target?.value)}
+                    />
                 </Col>
                 <Col xs={4} >
                     <Row className="header__feature">

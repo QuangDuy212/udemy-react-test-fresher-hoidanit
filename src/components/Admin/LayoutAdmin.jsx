@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -16,14 +16,24 @@ import { FaUsersGear } from "react-icons/fa6";
 import { CiFileOn } from "react-icons/ci";
 import Account from '../Account/Account';
 import './LayoutAdmin.scss'
+import { useLocation } from "react-router-dom";
 
 const { Header, Sider, Content } = Layout;
 
 const App = () => {
+    //STATE:
     const [collapsed, setCollapsed] = useState(false);
+
+    //LIBRARY:
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
+
+
+    const location = useLocation();
+
+    useEffect(() => {
+    }, [])
 
     return (
         <Layout>
@@ -39,10 +49,10 @@ const App = () => {
                     title='Admin'
                     theme="light"
                     mode="inline"
-                    defaultSelectedKeys={['1']}
+                    selectedKeys={[location.pathname]}
                     items={[
                         {
-                            key: '1',
+                            key: '/admin',
                             icon: <RxDashboard />,
                             label: <Link to={'/admin'}>Dash board</Link>,
                         },
@@ -52,24 +62,24 @@ const App = () => {
                             label: 'Manage Users',
                             children: [
                                 {
-                                    key: '5',
+                                    key: '/admin/user',
                                     icon: <FaUsersGear />,
                                     label: <Link to={'/admin/user'}>CRUD</Link>
                                 },
                                 {
-                                    key: '6',
+                                    key: 'file',
                                     icon: <CiFileOn />,
                                     label: 'File'
                                 },
                             ]
                         },
                         {
-                            key: '3',
+                            key: '/admin/book',
                             icon: <FaAddressBook />,
                             label: <Link to={'/admin/book'}>Manage Books</Link>,
                         },
                         {
-                            key: '4',
+                            key: '/admin/order',
                             icon: <MdBorderColor />,
                             label: <Link to={'/admin/order'}>Manage Orders</Link>,
                         },

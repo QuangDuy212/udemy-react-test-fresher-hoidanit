@@ -109,3 +109,7 @@ export const callChangePassword = (email, oldpass, newpass) => {
 export const callGetDashBoard = () => {
     return axios.get(`/api/v1/database/dashboard`);
 }
+
+export const callGetListOrder = (current, pageSize) => {
+    return axios.get(`/api/v1/order?current=${current}&pageSize=${pageSize}`)
+}

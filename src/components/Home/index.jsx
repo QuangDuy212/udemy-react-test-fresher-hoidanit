@@ -5,10 +5,12 @@ import { Button, Col, Form, Row, Checkbox, Divider, InputNumber, Rate, Card, Tab
 import { useEffect, useState } from 'react';
 import { callFetchCategory, callGetBookWithPaginate } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
+import { useOutletContext } from "react-router-dom";
 
 
 const { Meta } = Card;
-const Home = () => {
+const Home = (props) => {
+    //STATE:
     const PAGE_SIZE = 8;
     const [listBook, setListBook] = useState([]);
     const [current, setCurrent] = useState(1);
@@ -21,9 +23,15 @@ const Home = () => {
     const [loading, setLoading] = useState(false);
     const [filter, setFilter] = useState("");
 
+    //LIBRARY:
     const [form] = Form.useForm();
-
     const navigate = useNavigate();
+
+    //PROPS:
+    const [searchTerm, setSearchTerm] = useOutletContext();
+
+
+    //METHODS:
     useEffect(() => {
         const fetchCategory = async () => {
             const res = await callFetchCategory();
@@ -44,7 +52,8 @@ const Home = () => {
 
     useEffect(() => {
         fetchBook();
-    }, [current, pageSize, querySearch, sortQuery, filter]);
+        console.log(">>> check search: ", searchTerm)
+    }, [current, pageSize, searchTerm, sortQuery, filter]);
 
     const fetchBook = async () => {
         setLoading(true);
@@ -54,8 +63,8 @@ const Home = () => {
             query += querySearch;
         }
 
-        if (sortQuery) {
-            query += sortQuery;
+        if (searchTerm) {
+            query += `&mainText=/${searchTerm}/i`;
         }
 
         if (filter) {
@@ -212,7 +221,8 @@ const Home = () => {
                             <div className='filter__title'>
                                 <span className='filter__title--icon'><IoFilter /></span>
                                 <span className='filter__title--name'>Bộ lọc sản phẩm</span>
-                                <Button className='filter__title--btn'><GrPowerReset onClick={() => form.resetFields()} /></Button>
+                                <Button className='filter__title--btn'><GrPowerReset
+                                    onClick={() => { form.resetFields(); setSearchTerm("") }} /></Button>
                             </div>
                             <div className='filter__body'>
                                 <Form

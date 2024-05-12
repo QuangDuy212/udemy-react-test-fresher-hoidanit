@@ -12,7 +12,7 @@ const BookPage = () => {
     const id = params?.get("id");
 
     useEffect(() => {
-        console.log(">>> check id: ", id)
+        console.log(location);
         fetchBook(id);
     }, [id])
 
