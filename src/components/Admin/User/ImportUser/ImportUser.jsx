@@ -3,7 +3,6 @@ import { Button, Modal, message, Upload, Space, Table, Tag, notification } from 
 import { InboxOutlined } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
 import { callBulkCreateUser } from '../../../../services/api';
-import templateUrl from './data/userImport.xlsx?url'
 
 const { Dragger } = Upload;
 
@@ -145,14 +144,14 @@ const ImportUser = (props) => {
                         <InboxOutlined />
                     </p>
                     <p className="ant-upload-text">Click or drag file to this area to upload</p>
-                    <p className="ant-upload-hint">
+                    {/* <p className="ant-upload-hint">
                         Support for a single upload. Only accept .csv, .xls, .xlsx<> </>
                         <a
                             onClick={(e) => e.stopPropagation()}
                             href={templateUrl}
                             download
                         >Dowload Sample File</a>
-                    </p>
+                    </p> */}
                 </Dragger>
                 <Table
                     columns={columns}

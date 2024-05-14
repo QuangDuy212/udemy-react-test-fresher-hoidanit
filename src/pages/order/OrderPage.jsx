@@ -97,8 +97,8 @@ const OrderPage = () => {
                                             return (
                                                 <>
 
-                                                    <Col xl={24} md={24} sm={24}>
-                                                        <div className="product" key={`product-${index}`}>
+                                                    <Col xl={24} md={24} sm={24} key={`product-${index}`}>
+                                                        <div className="product" >
                                                             <Row>
                                                                 <Col className="product__img " span={4}>
                                                                     <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item.detail.thumbnail}`} />
