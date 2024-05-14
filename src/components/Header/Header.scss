@@ -56,10 +56,13 @@
         justify-content: space-between;
 
         &--cart {
-            display: flex;
+            cursor: pointer;
 
-            padding: 10px;
-            cursor : pointer;
+            display        : flex;
+            justify-content: center;
+            align-items    : center;
+            padding        : 10px;
+            width          : 100%;
 
             .icon-cart1 {
                 font-size: 30px;

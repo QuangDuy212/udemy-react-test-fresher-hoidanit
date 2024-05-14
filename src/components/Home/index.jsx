@@ -52,7 +52,6 @@ const Home = (props) => {
 
     useEffect(() => {
         fetchBook();
-        console.log(">>> check search: ", searchTerm)
     }, [current, pageSize, searchTerm, sortQuery, filter]);
 
     const fetchBook = async () => {

@@ -7,18 +7,28 @@ import { doLogoutAction } from "../../redux/account/accountSlice";
 import { Link, useNavigate } from "react-router-dom";
 
 import { UserOutlined } from '@ant-design/icons';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ManageUser from "./Modal/ManageUser";
 
-const Account = () => {
+const Account = (props) => {
     //STATE:
     const [isOpenManage, setIsOpenManage] = useState(false);
+
+    //PROPS:
+    const { isOpenAccount, setIsOpenAccount } = props;
 
     //LIBRARY:
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const isAuthenticated = useSelector(state => state.account.isAuthenticated);
     const user = useSelector(state => state.account.user);
+
+
+    useEffect(() => {
+        if (isOpenAccount === 'YES') {
+            setIsOpenManage(true);
+        }
+    }, [isOpenAccount])
 
     const hanldeLogout = async () => {
         if (!isAuthenticated) return;
@@ -60,7 +70,7 @@ const Account = () => {
             key: 'home'
         })
     }
-    else if (user.role === 'ADMIN' && window.location.pathname == '/') {
+    else if (user.role === 'ADMIN') {
         const tmp = {
             label: <Link to='/'>Trang chủ</Link>,
             key: 'home'
@@ -114,6 +124,7 @@ const Account = () => {
                 isOpenManage={isOpenManage}
                 setIsOpenManage={setIsOpenManage}
                 user={user}
+                setIsOpenAccount={setIsOpenAccount}
             />
         </div>
     )

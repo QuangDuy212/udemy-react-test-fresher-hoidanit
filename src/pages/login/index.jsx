@@ -40,11 +40,11 @@ const LoginPage = () => {
         <>
             <>
                 <Row className='login'>
-                    <Col xs={{ span: 24 }} md={{ span: 24 }} xl={{ span: 10 }} className='login-title'>
-                        <h1>Shop book</h1>
-                        <h2>Facebook helps you connect and share with the people in your life.</h2>
+                    <Col xs={0} md={24} xl={10} className='login-title'>
+                        <h1>Book shop</h1>
+                        <h2>Book shop helps you find and learn  in your life.</h2>
                     </Col>
-                    <Col xs={{ span: 24 }} md={{ span: 24 }} xl={{ span: 10 }} className='login-con'>
+                    <Col xs={24} md={24} xl={10} className='login-con'>
                         <div className='login-con__title'>
                             <h1>
                                 Login

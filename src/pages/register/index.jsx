@@ -35,7 +35,7 @@ const RegisterPage = () => {
     return (
         <>
             <Row className='register'>
-                <Col xs={{ span: 24 }} md={{ span: 24 }} xl={{ span: 10 }} className='register-title'>
+                <Col xs={{ span: 0 }} md={{ span: 24 }} xl={{ span: 10 }} className='register-title'>
                     <h1>Shop book</h1>
                     <h2>Facebook helps you connect and share with the people in your life.</h2>
                 </Col>

@@ -4,7 +4,7 @@ import UpdateInfoUser from './UpdateInfoUser';
 import ChangePassword from './ChangePassword';
 
 const ManageUser = (props) => {
-    const { isOpenManage, setIsOpenManage, user } = props
+    const { isOpenManage, setIsOpenManage, user, setIsOpenAccount } = props
 
     const items = [
         {
@@ -28,7 +28,7 @@ const ManageUser = (props) => {
                 centered
                 open={isOpenManage}
                 onOk={() => setIsOpenManage(false)}
-                onCancel={() => setIsOpenManage(false)}
+                onCancel={() => { setIsOpenManage(false); setIsOpenAccount("NO") }}
                 width={800}
                 footer={<></>}
             >
