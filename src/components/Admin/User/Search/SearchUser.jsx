@@ -5,7 +5,8 @@ import './SearchUser.scss'
 
 const SearchUser = (props) => {
     const handleSearch = (query) => {
-        props.fetchData(query);
+        props.setCurrent(1);
+        props.fetchUser();
     }
     const MyFormItemContext = React.createContext([]);
 

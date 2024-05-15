@@ -251,6 +251,7 @@ const User = () => {
                         fetchUser={fetchUser}
                         setIsSearch={setIsSearch}
                         setQuerySearch={setQuerySearch}
+                        setCurrent={setCurrent}
                     />
                 </Col>
                 <Divider />
