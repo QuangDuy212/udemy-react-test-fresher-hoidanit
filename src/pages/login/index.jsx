@@ -18,7 +18,6 @@ const LoginPage = () => {
         setIsSubmit(true);
         const res = await callLogin(username, password);
         setIsSubmit(false);
-        console.log(">>> check res: ", res)
         if (res?.data) {
             localStorage.setItem("access_token", res.data.access_token);
             dispatch(doLoginAction(res.data.user));
@@ -28,7 +27,7 @@ const LoginPage = () => {
             notification.error({
                 message: "Có lỗi xảy ra",
                 description: res.message,
-                duration: 5
+                duration: 2
             })
         }
     };

@@ -86,14 +86,17 @@
             }
 
             &--btn {
-                display   : flex;
-                margin-top: 60px;
+                display        : flex;
+                justify-content: center;
+                align-items    : center;
+                margin-top     : 60px;
+                gap            : 20px;
 
                 .add {
                     display        : flex;
                     justify-content: center;
                     align-items    : center;
-                    width          : 200px;
+                    min-width      : 200px;
                     height         : 48px;
                     background     : rgba(255, 87, 34, .1);
                     background     : #d5e2f3;
@@ -106,14 +109,13 @@
                 }
 
                 .buy {
-                    margin-left: 10px;
-                    width      : 180px;
-                    height     : 48px;
-                    background : #6da4e8;
-                    color      : #fff;
-                    outline    : 0;
-                    overflow   : visible;
-                    position   : relative;
+                    min-width : 200px;
+                    height    : 48px;
+                    background: #6da4e8;
+                    color     : #fff;
+                    outline   : 0;
+                    overflow  : visible;
+                    position  : relative;
                 }
             }
         }

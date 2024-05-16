@@ -101,7 +101,7 @@ const ViewDetail = (props) => {
                 <div className='content'>
                     {dataBook && dataBook._id ?
                         <Row gutter={[20, 20]}>
-                            <Col xl={10} md={24}>
+                            <Col xl={10} md={24} sm={24} xs={24}>
                                 <ImageGallery
                                     ref={refGallery}
                                     items={image}
@@ -112,7 +112,7 @@ const ViewDetail = (props) => {
                                     onClick={() => handleOnClickImage()}
                                 />
                             </Col>
-                            <Col xl={14} md={24}>
+                            <Col xl={14} md={24} sm={24} xs={24}>
                                 <div className='viewdetail__info'>
                                     <div className='viewdetail__info--name'>{dataBook?.mainText}</div>
                                     <div className='viewdetail__info--author'>Tác giả: {dataBook?.author}</div>
@@ -138,15 +138,27 @@ const ViewDetail = (props) => {
                                         />
                                     </div>
                                     <div className='viewdetail__info--btn'>
-                                        <Button
-                                            type='button'
-                                            className='add'
-                                            onClick={() => handleAddToCart(currentQuantity, dataBook)}
-                                        >
-                                            <FaCartPlus style={{ margin: "0 5px 0 0", fontSize: "20px" }} />
-                                            Thêm vào giỏ hàng
-                                        </Button>
-                                        <Button className='buy'>Mua ngay</Button>
+                                        <Row gutter={[20, 20]}>
+                                            <Col xl={14} md={14} sm={24} xs={24}>
+                                                <div style={{ display: "flex", justifyContent: "center", alignContent: "center" }}>
+                                                    <Button
+                                                        type='button'
+                                                        className='add'
+                                                        onClick={() => handleAddToCart(currentQuantity, dataBook)}
+                                                    >
+                                                        <FaCartPlus style={{ margin: "0 5px 0 0", fontSize: "20px" }} />
+                                                        Thêm vào giỏ hàng
+                                                    </Button>
+                                                </div>
+                                            </Col>
+                                            <Col xl={10} md={10} sm={24} xs={24}>
+                                                <div style={{ display: "flex", justifyContent: "center", alignContent: "center" }}>
+                                                    <Button className='buy'>Mua ngay</Button>
+                                                </div>
+                                            </Col>
+                                        </Row>
+
+
                                     </div>
 
                                 </div>

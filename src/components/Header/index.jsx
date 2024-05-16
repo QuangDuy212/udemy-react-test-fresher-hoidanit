@@ -124,7 +124,7 @@ const Header = (props) => {
                             <Drawer
                                 title="Menu"
                                 placement={placement}
-                                width={500}
+                                width={"300px"}
                                 onClose={onClose}
                                 open={open}
                                 className="bar"

@@ -47,6 +47,9 @@ const OrderPage = () => {
             setCurrentStep(2);
         }
     }
+    const truncate = (str, n) => {
+        return (str.length > n) ? str.slice(0, n - 1) + '...' : str;
+    };
     return (
         <>
             <div className="cart-container">
@@ -70,7 +73,7 @@ const OrderPage = () => {
                         <>
                             <Col md={18} sm={24}>
                                 <Row gutter={[20, 20]}>
-                                    <Col xl={24} md={24} sm={24}>
+                                    <Col xl={24} md={24} sm={24} xs={0}>
                                         <div className="title">
                                             <Row>
                                                 <Col className="title__name" xs={12} sm={12}>
@@ -91,31 +94,36 @@ const OrderPage = () => {
                                             </Row>
                                         </div>
                                     </Col>
+                                    <Col xl={0} md={0} sm={0} xs={24}>
+                                        <div className="title"
+                                            style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                            Đơn đặt hàng
+                                        </div>
+                                    </Col>
                                     {carts && carts.length > 0 &&
                                         carts.map((item, index) => {
                                             const total = item.quantity * item.detail.price;
                                             return (
                                                 <>
-
                                                     <Col xl={24} md={24} sm={24} key={`product-${index}`}>
                                                         <div className="product" >
                                                             <Row>
-                                                                <Col className="product__img " span={4}>
+                                                                <Col className="product__img " xl={4} md={4} sm={12} xs={12}>
                                                                     <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item.detail.thumbnail}`} />
                                                                 </Col>
-                                                                <Col className="product__name " span={8}>
-                                                                    {item.detail.mainText}
+                                                                <Col className="product__name " xl={8} md={8} sm={12} xs={12}>
+                                                                    {truncate(item.detail.mainText, 20)}
                                                                 </Col>
-                                                                <Col className="product__price flex-full" span={3}>
+                                                                <Col className="product__price flex-full" xl={3} md={3} sm={6} xs={6}>
                                                                     {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.detail.price)}
                                                                 </Col>
-                                                                <Col className="product__quantity flex-full" span={3}>
+                                                                <Col className="product__quantity flex-full" xl={3} md={3} sm={6} xs={6}>
                                                                     <InputNumber min={1} max={item.detail.quantity} defaultValue={item.quantity} onChange={(value) => onChange(value, item)} />
                                                                 </Col>
-                                                                <Col className="product__total flex-full" span={3}>
+                                                                <Col className="product__total flex-full" xl={3} md={3} sm={6} xs={6}>
                                                                     {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total)}
                                                                 </Col>
-                                                                <Col className="product__btn flex-full" span={3}>
+                                                                <Col className="product__btn flex-full" xl={3} md={3} sm={6} xs={6}>
                                                                     <button onClick={() => onDelete(item)}>Xóa</button>
                                                                 </Col>
                                                             </Row>
@@ -136,7 +144,7 @@ const OrderPage = () => {
 
                                 </Row>
                             </Col>
-                            <Col md={6} sm={24}>
+                            <Col md={6} sm={24} xs={24}>
                                 {currentStep === 1 &&
                                     <ViewOrder
                                         handleBuyBtn={handleBuyBtn}

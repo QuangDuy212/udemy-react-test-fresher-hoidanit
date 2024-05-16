@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './HistoryOrder.scss';
-import { Space, Table, Tag } from 'antd';
+import { Col, Row, Space, Table, Tag } from 'antd';
 import { callGetListOrderWithPaginate } from '../../services/api';
 import ModalDetail from './ModalDetail';
 
@@ -88,7 +88,12 @@ const HistoryOrder = () => {
         <>
             <div className='history'>
                 <div style={{ height: "60px" }}></div>
-                <div className='history__title'> Lịch sử mua hàng</div>
+                <Row>
+                    <Col xl={24} md={24} sm={0} xs={0}>
+                        <div className='history__title'> Lịch sử mua hàng</div>
+                    </Col>
+                </Row>
+
                 <div className='history__table'>
                     <Table
                         columns={columns}
