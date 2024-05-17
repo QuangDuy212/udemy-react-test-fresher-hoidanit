@@ -3,6 +3,7 @@ import { Col, Row, Statistic, Card } from 'antd';
 import { useEffect, useState } from 'react';
 import CountUp from 'react-countup';
 import { callGetDashBoard } from '../../services/api';
+import DashboardLoader from '../../components/Admin/Loader/DashboardLoader';
 
 
 const DashboardAdmin = () => {
@@ -29,26 +30,31 @@ const DashboardAdmin = () => {
     );
     return (
         <>
-            <Row gutter={[40, 40]}>
-                <Col span={12}>
-                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                        <Card bordered={true} style={{ width: 300 }}>
-                            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                <Statistic title="Users" value={dashBoard.countUser} formatter={formatter} />
-                            </div>
-                        </Card>
-                    </div>
-                </Col>
-                <Col span={12}>
-                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                        <Card bordered={true} style={{ width: 300 }}>
-                            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                <Statistic title="Orders" value={dashBoard.countOrder} formatter={formatter} />
-                            </div>
-                        </Card>
-                    </div>
-                </Col>
-            </Row>
+            {dashBoard
+                ?
+                <Row gutter={[40, 40]}>
+                    <Col span={12}>
+                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                            <Card bordered={true} style={{ width: 300 }}>
+                                <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                    <Statistic title="Users" value={dashBoard.countUser} formatter={formatter} />
+                                </div>
+                            </Card>
+                        </div>
+                    </Col>
+                    <Col span={12}>
+                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                            <Card bordered={true} style={{ width: 300 }}>
+                                <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                    <Statistic title="Orders" value={dashBoard.countOrder} formatter={formatter} />
+                                </div>
+                            </Card>
+                        </div>
+                    </Col>
+                </Row>
+                :
+                <DashboardLoader />
+            }
         </>
     )
 }

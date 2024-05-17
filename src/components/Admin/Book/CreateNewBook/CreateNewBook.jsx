@@ -12,11 +12,13 @@ import {
     Select,
     message,
     notification,
-    Image, Upload
+    Image, Upload,
 } from 'antd';
 import { callCreateABook, callFetchCategory, callRegister, callUploadBookImg } from '../../../../services/api';
 import { useForm } from 'antd/es/form/Form';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+
+import ImgCrop from 'antd-img-crop';
 
 const CreateNewBook = (props) => {
     const { isOpenNewBook, setIsOpenNewBook, fetchBook } = props;
@@ -306,24 +308,26 @@ const CreateNewBook = (props) => {
                                 label='Ảnh thumbnail'
                                 name='thumbnail'
                             >
-                                <Upload
-                                    customRequest={handleUploadFileThumbnail}
-                                    listType="picture-card"
-                                    onPreview={handlePreview}
-                                    beforeUpload={beforeUpload}
-                                    onChange={handleChange}
-                                    multiple={false}
-                                    maxCount={1}
-                                    onRemove={(file) => handleOnRemove(file, 'thumbnail')}
-                                >
+                                <ImgCrop rotationSlider>
+                                    <Upload
+                                        customRequest={handleUploadFileThumbnail}
+                                        listType="picture-card"
+                                        onPreview={handlePreview}
+                                        beforeUpload={beforeUpload}
+                                        onChange={handleChange}
+                                        multiple={false}
+                                        maxCount={1}
+                                        onRemove={(file) => handleOnRemove(file, 'thumbnail')}
+                                    >
 
-                                    <button style={{ border: 0, background: 'none' }} type="button">
+                                        <button style={{ border: 0, background: 'none' }} type="button">
 
-                                        {/* {loading ? <LoadingOutlined /> : <PlusOutlined />} */}
-                                        <PlusOutlined />
-                                        <div style={{ marginTop: 8 }}>Upload</div>
-                                    </button>
-                                </Upload>
+                                            {/* {loading ? <LoadingOutlined /> : <PlusOutlined />} */}
+                                            <PlusOutlined />
+                                            <div style={{ marginTop: 8 }}>Upload</div>
+                                        </button>
+                                    </Upload>
+                                </ImgCrop>
                             </Form.Item>
                             {previewImage && (
                                 <Image
@@ -343,23 +347,25 @@ const CreateNewBook = (props) => {
                                 label='Ảnh slider'
                                 name='slider'
                             >
-                                <Upload
-                                    customRequest={handleUploadFileSlider}
-                                    listType="picture-card"
-                                    onPreview={handlePreview}
-                                    beforeUpload={beforeUpload}
-                                    onChange={(info) => handleChange(info, 'slider')}
-                                    onRemove={(file) => handleOnRemove(file, 'slider')}
+                                <ImgCrop rotationSlider>
+                                    <Upload
+                                        customRequest={handleUploadFileSlider}
+                                        listType="picture-card"
+                                        onPreview={handlePreview}
+                                        beforeUpload={beforeUpload}
+                                        onChange={(info) => handleChange(info, 'slider')}
+                                        onRemove={(file) => handleOnRemove(file, 'slider')}
 
-                                >
-                                    {slider.length >= 8 ? null :
-                                        <button style={{ border: 0, background: 'none' }} type="button">
+                                    >
+                                        {slider.length >= 8 ? null :
+                                            <button style={{ border: 0, background: 'none' }} type="button">
 
-                                            {/* {loadingSlider ? <LoadingOutlined /> : <PlusOutlined />} */}
-                                            <PlusOutlined />
-                                            <div style={{ marginTop: 8 }}>Upload</div>
-                                        </button>}
-                                </Upload>
+                                                {/* {loadingSlider ? <LoadingOutlined /> : <PlusOutlined />} */}
+                                                <PlusOutlined />
+                                                <div style={{ marginTop: 8 }}>Upload</div>
+                                            </button>}
+                                    </Upload>
+                                </ImgCrop>
                             </Form.Item>
                             {previewImage && (
                                 <Image

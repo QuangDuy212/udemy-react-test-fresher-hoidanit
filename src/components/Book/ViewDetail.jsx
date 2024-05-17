@@ -9,6 +9,7 @@ import { FaCartPlus } from "react-icons/fa";
 import BookLoader from './BookLoader';
 import { useDispatch } from 'react-redux';
 import { doAddBookAction } from '../../redux/order/orderSlice';
+import { useNavigate } from 'react-router-dom';
 
 const images = [
     {
@@ -70,6 +71,7 @@ const images = [
 const ViewDetail = (props) => {
     // LIBRARY:
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     //PROPS:
     const { dataBook } = props;
@@ -93,6 +95,11 @@ const ViewDetail = (props) => {
 
     const handleAddToCart = (quantity, book) => {
         dispatch(doAddBookAction({ quantity, detail: book, _id: book._id }));
+    }
+
+    const handleBuyNow = (quantity, book) => {
+        dispatch(doAddBookAction({ quantity, detail: book, _id: book._id }));
+        navigate("/order");
     }
 
     return (
@@ -153,7 +160,10 @@ const ViewDetail = (props) => {
                                             </Col>
                                             <Col xl={10} md={10} sm={24} xs={24}>
                                                 <div style={{ display: "flex", justifyContent: "center", alignContent: "center" }}>
-                                                    <Button className='buy'>Mua ngay</Button>
+                                                    <Button
+                                                        className='buy'
+                                                        onClick={() => handleBuyNow(currentQuantity, dataBook)}
+                                                    >Mua ngay</Button>
                                                 </div>
                                             </Col>
                                         </Row>

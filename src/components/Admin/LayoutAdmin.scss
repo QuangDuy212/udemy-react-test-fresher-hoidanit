@@ -2,8 +2,19 @@
     font-size: 20px;
 }
 
+.admin-left {
+    margin-top: 70px;
+    height    : calc(100vh - 70px);
+}
+
 .admin-header {
-    display        : flex;
-    justify-content: space-between;
-    align-items    : center;
+    position        : fixed;
+    display         : flex;
+    justify-content : space-between;
+    align-items     : center;
+    background-color: #fff;
+    box-shadow      : 1px 1px #ccc;
+    z-index         : 1000;
+    right           : 0;
+    left            : 0;
 }

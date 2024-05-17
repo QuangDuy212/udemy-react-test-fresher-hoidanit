@@ -41,7 +41,8 @@ const App = () => {
                 trigger={null}
                 collapsible
                 collapsed={collapsed}
-                theme='light'>
+                theme='light'
+                className='admin-left'>
                 <div style={{ height: 23, margin: 16, textAlign: "center" }} className='title'>
                     <GrUserAdmin /> {!collapsed && <>Admin</>}
                 </div>
@@ -65,12 +66,7 @@ const App = () => {
                                     key: '/admin/user',
                                     icon: <FaUsersGear />,
                                     label: <Link to={'/admin/user'}>CRUD</Link>
-                                },
-                                {
-                                    key: 'file',
-                                    icon: <CiFileOn />,
-                                    label: 'File'
-                                },
+                                }
                             ]
                         },
                         {
@@ -98,16 +94,21 @@ const App = () => {
                             height: 64,
                         }}
                     />
-                    <Account />
+                    <div style={{ marginRight: "50px" }}>
+
+                        <Account />
+                    </div>
                 </Header>
                 <Content
                     style={{
-                        margin: '24px 16px',
+                        margin: '70px 16px 0',
                         padding: 24,
-                        minHeight: 500,
+                        height: "calc(100vh - 70px)",
                         background: colorBgContainer,
                         borderRadius: borderRadiusLG,
+                        overflow: "scroll"
                     }}
+                    className='content'
                 >
                     <Outlet />
                 </Content>

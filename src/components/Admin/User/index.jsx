@@ -245,7 +245,7 @@ const User = () => {
 
     return (
         <>
-            <Row gutter={[20, 20]}>
+            <Row gutter={[20, 20]} >
                 <Col span={24}>
                     <SearchUser
                         fetchUser={fetchUser}
